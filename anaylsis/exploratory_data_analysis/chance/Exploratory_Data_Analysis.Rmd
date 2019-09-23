@@ -1,0 +1,211 @@
+---
+title: "Exploratory_Data_Analysis"
+author: "Chance Robinson"
+date: "9/21/2019"
+output: 
+  github_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Exploratory Data Analysis
+
+
+### Library Imports
+
+```{r libraries}
+library(tidyverse)
+library(lubridate)
+
+```
+
+### Load the csv data
+
+
+```{r load, results='hide', message=FALSE}
+
+train <- read_csv('../../data/train.csv')
+test <- read_csv('../../data/test.csv')
+
+```
+
+### Column Name (Train)
+
+```{r}
+colnames(train)
+
+```
+
+
+### Identify Dimensions
+
+- Train {"rows": 10886, "columns": 12}
+
+- Test {"rows": 6493, "columns": 9}
+
+```{r}
+head(train)
+
+# get the dimensions of the train and test data sets
+
+no_of_rows_trn <- dim(train)[1]
+no_of_rows_tst <- dim(test)[1]
+
+no_of_cols_trn <- dim(train)[2]
+no_of_cols_tst <- dim(test)[2]
+
+no_of_rows_trn
+no_of_rows_tst
+
+no_of_cols_trn
+no_of_cols_tst
+
+```
+### Example Output (Train)
+
+```{r train}
+head(train)
+```
+
+
+### Example output (Test)
+
+- The test data set is missing 3 columns from the train data set (causal, registered and count)
+
+```{r test}
+
+head(test)
+
+```
+
+### Missing Data (Both)
+
+- No NA values can be found in either the training or test data sets 
+
+```{r missing}
+
+# train
+any(is.na(train))
+
+# test
+any(is.na(test))
+
+```
+
+### Split Date-Time (Both)
+
+- Year, Month, Day and Hour
+
+```{r}
+library(lubridate)
+
+
+
+train <- train %>%
+  mutate(year = as.numeric(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.numeric(format(datetime, format = "%d")),
+         hour = as.numeric(format(datetime, format = "%H")))
+
+test <- test %>%
+  mutate(year = as.numeric(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.numeric(format(datetime, format = "%d")),
+         hour = as.numeric(format(datetime, format = "%H")))
+
+
+
+
+
+```
+
+
+
+### Convert Months to Ordered Factor (Both)
+
+```{r}
+
+train$month <-month(train$datetime, label = TRUE, abbr = FALSE)
+test$month <-month(test$datetime, label = TRUE, abbr = FALSE)
+
+```
+
+
+### Count by Month (Train)
+
+- The months seem to show an upward trend throughout the year
+- Increased popularity of Ride-Sharing program?
+
+```{r}
+
+train %>%
+  ggplot(aes(x = month)) + 
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+### Count by Month (Test)
+
+- Notice how the months with fewer days have fewer totals (i.e...February)
+
+
+```{r}
+
+test %>%
+  ggplot(aes(x = month)) + 
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+
+
+
+### Days (Train)
+
+- The train data set covers days from the 1st through the 19th
+
+
+```{r}
+
+train %>%
+  ggplot(aes(x = day)) + 
+  geom_bar()
+
+```
+
+
+### Days (Test)
+
+- The test set covers days from the 20th through the 31st
+
+```{r days_test}
+
+
+test %>%
+  ggplot(aes(x = day)) + 
+  geom_bar()
+
+
+```
+
+
+### Months
+
+- 1 (Dec 21 ~ March 20)
+- 2 (March 21 ~ Jun 20)
+- 3 (June 21 ~ Sept 20)
+- 4 (Sept 21 ~ Dec 20)
+
+```{r}
+# train$season  <- factor(train$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+
+
+```
+
+
