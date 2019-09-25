@@ -1,0 +1,85 @@
+---
+title: "DS6372_Project"
+author: "Jayson Barker"
+date: "9/24/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r sect1}
+# setting working directory
+setwd("F:/SMU/DS6372/Project 1/bike-sharing-demand")
+bike_test<-read.csv("test.csv")
+bike_train<-read.csv("train.csv")
+library(car)
+library(ggplot2)
+library(sqldf)
+
+```
+
+
+## Examine the first couple of rows
+```{r sect2}
+
+# convert datetime to just date
+bike_train[,"date_conv"] <- as.Date(as.POSIXct(bike_train$datetime))
+
+# first couple of rows
+head(bike_train)
+
+```
+
+
+## Individual Scatterplot Matricies
+```{r sect4, echo=TRUE}
+
+# various scatter plots - registered vs temp - color by season
+plot(bike_train$registered,bike_train$temp, xlab="registered",ylab="temp", col = bike_train$season)
+
+# various scatter plots - registered vs humidity - color by season
+plot(bike_train$registered,bike_train$humidity, xlab="registered",ylab="humidity", col = bike_train$season)
+
+# various scatter plots - registered vs windspeed - color by season
+plot(bike_train$registered,bike_train$windspeed, xlab="registered",ylab="windspeed", col = bike_train$season)
+
+# various scatter plots - registered vs casual - color by season
+plot(bike_train$registered,bike_train$casual, xlab="registered",ylab="casual", col = bike_train$season)
+
+# various scatter plots - registered vs count - color by season
+plot(bike_train$registered,bike_train$count, xlab="registered",ylab="count", col = bike_train$season)
+
+# various scatter plots - registered vs atemp - color by season
+plot(bike_train$registered,bike_train$atemp, xlab="registered",ylab="atemp", col = bike_train$season)
+
+```
+
+
+## Examine the first couple of rows
+```{r sect3}
+
+# average temperature per day
+avg_temp_day <- data.frame(sqldf("SELECT date_conv, avg(temp) FROM bike_train GROUP BY date_conv ORDER BY date_conv DESC")) 
+avg_temp_day
+
+# max temperature day
+max_temp <- data.frame(sqldf("SELECT date_conv, max(temp) FROM bike_train"))
+max_temp
+
+# min temperature day
+min_temp <- data.frame(sqldf("SELECT date_conv, min(temp) FROM bike_train"))
+min_temp
+
+
+```
+
+
+
+
+
+
+
+
