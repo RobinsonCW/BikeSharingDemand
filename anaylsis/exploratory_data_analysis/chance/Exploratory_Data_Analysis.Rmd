@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Library Imports
 
-```{r libraries}
+```{r libraries, quietely=TRUE, warn.conflicts=FALSE}
 library(tidyverse)
 library(lubridate)
 
@@ -33,44 +33,30 @@ test <- read_csv('../../data/test.csv')
 
 ```
 
-### Column Name (Train)
+### Column Names (Train)
 
-```{r}
+```{r column_names}
+
 colnames(train)
 
 ```
 
-
-### Identify Dimensions
-
-- Train {"rows": 10886, "columns": 12}
-
-- Test {"rows": 6493, "columns": 9}
+### Example Output (Train)
 
 ```{r}
+
 head(train)
 
-# get the dimensions of the train and test data sets
-
-no_of_rows_trn <- dim(train)[1]
-no_of_rows_tst <- dim(test)[1]
-
-no_of_cols_trn <- dim(train)[2]
-no_of_cols_tst <- dim(test)[2]
-
-no_of_rows_trn
-no_of_rows_tst
-
-no_of_cols_trn
-no_of_cols_tst
-
 ```
+
+
 ### Example Output (Train)
 
 ```{r train}
-head(train)
-```
 
+head(train)
+
+```
 
 ### Example output (Test)
 
@@ -81,6 +67,30 @@ head(train)
 head(test)
 
 ```
+
+### Identify Dimensions
+
+```{r echo=FALSE}
+# get the dimensions of the train and test data sets
+
+no_of_rows_trn <- dim(train)[1]
+no_of_rows_tst <- dim(test)[1]
+
+no_of_cols_trn <- dim(train)[2]
+no_of_cols_tst <- dim(test)[2]
+
+# no_of_rows_trn
+# no_of_rows_tst
+# 
+# no_of_cols_trn
+# no_of_cols_tst
+
+```
+
+- Train {"rows": `r no_of_rows_trn`, "columns": `r no_of_cols_trn`}
+
+- Test {"rows": `r no_of_rows_tst`, "columns": `r no_of_cols_tst`}
+
 
 ### Missing Data (Both)
 
@@ -95,6 +105,67 @@ any(is.na(train))
 any(is.na(test))
 
 ```
+
+
+### Data Dictionary
+
+  Column Name      | 	Type                Description
+  -----------------|    ----------------- | ------------------------------------------------
+  1.  datetime     |    Date			        | YYYY-MM-DD HH24 (example:  2011-01-01 04:00:00)
+  2.  season       |    Integer 		      |	(1-4)
+  3.  holiday      |    Integer 		      |	(0 or 1)
+  4.  workingday   |    Integer 		      |	(0 or 1)
+  5.  weather      |    Integer 		      |	(1-4)
+  6.  temp         |    Float 			      |	temparture in Celcius
+  7.  atemp        |    Float 			      |	"feels like" temperature in Celsius
+  8.  humidity     |    Integer           | relative humidity
+  9.  windspeed    |    Float             | wind speed
+  10. casual       |    Integer 		      |	count of casual users 
+  11. registered   |    Integer 		      |	count of registered users 
+  12. count        |    Integer 		      |	count of total users `response variable`
+  
+  
+### Factors
+
+  * season
+    + 1 = Dec 21 ~ March 20 (Spring)
+    + 2 = March 21 ~ Jun 20 (Summer)
+    + 3 = June 21 ~ Sept 20 (Fall)
+    + 4 = Sept 21 ~ Dec 20  (Winter)
+
+  * holiday
+    + 0 = No
+    + 1 = Yes
+    
+  * workingday
+    + 0 = No
+    + 1 = Yes
+    
+```{r factors}
+train$season <- factor(train$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+test$season <- factor(test$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+
+table(train$season)
+
+train$holiday <- factor(train$holiday, labels = c("No", "Yes"))
+test$holiday <- factor(test$holiday, labels = c("No", "Yes"))
+
+table(test$holiday)
+
+train$workingday <- factor(train$workingday, labels = c("No", "Yes"))
+test$workingday <- factor(test$workingday, labels = c("No", "Yes"))
+
+
+train$weather <- factor(train$weather, labels = c("Great", "Good", "Average", "Poor"))
+test$weather <- factor(test$weather, labels = c("Great", "Good", "Average", "Poor"))
+
+
+table(test$weather)
+
+
+```
+
+
 
 ### Split Date-Time (Both)
 
@@ -194,18 +265,49 @@ test %>%
 
 ```
 
+```{r}
+head(train)
+```
 
-### Months
 
-- 1 (Dec 21 ~ March 20)
-- 2 (March 21 ~ Jun 20)
-- 3 (June 21 ~ Sept 20)
-- 4 (Sept 21 ~ Dec 20)
+### Explanatory Variable plots against Response Variable
 
 ```{r}
-# train$season  <- factor(train$season, labels = c("Spring", "Summer", "Fall", "Winter"))
 
+train %>%
+  ggplot(aes(x=season, y=count, fill=season)) + geom_boxplot()
+
+
+train %>%
+  ggplot(aes(x=holiday, y=count, fill=holiday)) + geom_boxplot()
+
+
+train %>%
+  ggplot(aes(x=workingday, y=count, fill=workingday)) + geom_boxplot()
+
+
+train %>%
+  ggplot(aes(x=weather, y=count, fill=weather)) + geom_boxplot()
 
 ```
 
+
+
+### Model Fitting
+
+
+```{r}
+
+model.base.formula = count ~ season + 
+                             holiday +
+                             workingday + 
+                             weather + 
+                             windspeed
+
+
+model  <- lm(formula = model.base.formula, data = train)
+
+plot(model)
+
+```
 
