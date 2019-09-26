@@ -8,7 +8,6 @@ Chance Robinson
       - [Load the csv data](#load-the-csv-data)
       - [Column Names (Train)](#column-names-train)
       - [Example Output (Train)](#example-output-train)
-      - [Example Output (Train)](#example-output-train-1)
       - [Example output (Test)](#example-output-test)
       - [Identify Dimensions](#identify-dimensions)
       - [Missing Data (Both)](#missing-data-both)
@@ -55,6 +54,17 @@ library(lubridate)
     ## 
     ##     date
 
+``` r
+library(olsrr)
+```
+
+    ## 
+    ## Attaching package: 'olsrr'
+
+    ## The following object is masked from 'package:datasets':
+    ## 
+    ##     rivers
+
 ### Load the csv data
 
 ``` r
@@ -71,24 +81,6 @@ colnames(train)
     ##  [1] "datetime"   "season"     "holiday"    "workingday" "weather"   
     ##  [6] "temp"       "atemp"      "humidity"   "windspeed"  "casual"    
     ## [11] "registered" "count"
-
-### Example Output (Train)
-
-``` r
-head(train)
-```
-
-    ## # A tibble: 6 x 12
-    ##   datetime            season holiday workingday weather  temp atemp
-    ##   <dttm>               <dbl>   <dbl>      <dbl>   <dbl> <dbl> <dbl>
-    ## 1 2011-01-01 00:00:00      1       0          0       1  9.84  14.4
-    ## 2 2011-01-01 01:00:00      1       0          0       1  9.02  13.6
-    ## 3 2011-01-01 02:00:00      1       0          0       1  9.02  13.6
-    ## 4 2011-01-01 03:00:00      1       0          0       1  9.84  14.4
-    ## 5 2011-01-01 04:00:00      1       0          0       1  9.84  14.4
-    ## 6 2011-01-01 05:00:00      1       0          0       2  9.84  12.9
-    ## # ... with 5 more variables: humidity <dbl>, windspeed <dbl>,
-    ## #   casual <dbl>, registered <dbl>, count <dbl>
 
 ### Example Output (Train)
 
@@ -205,28 +197,35 @@ table(train$season)
 train$holiday <- factor(train$holiday, labels = c("No", "Yes"))
 test$holiday <- factor(test$holiday, labels = c("No", "Yes"))
 
-table(test$holiday)
+table(train$holiday)
 ```
 
     ## 
-    ##   No  Yes 
-    ## 6304  189
+    ##    No   Yes 
+    ## 10575   311
 
 ``` r
 train$workingday <- factor(train$workingday, labels = c("No", "Yes"))
 test$workingday <- factor(test$workingday, labels = c("No", "Yes"))
 
+table(train$workingday)
+```
 
+    ## 
+    ##   No  Yes 
+    ## 3474 7412
+
+``` r
 train$weather <- factor(train$weather, labels = c("Great", "Good", "Average", "Poor"))
 test$weather <- factor(test$weather, labels = c("Great", "Good", "Average", "Poor"))
 
 
-table(test$weather)
+table(train$weather)
 ```
 
     ## 
     ##   Great    Good Average    Poor 
-    ##    4221    1710     560       2
+    ##    7192    2834     859       1
 
 ### Split Date-Time (Both)
 
@@ -273,7 +272,7 @@ train %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ### Count by Month (Test)
 
@@ -289,7 +288,7 @@ test %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ### Days (Train)
 
@@ -303,7 +302,7 @@ train %>%
   geom_bar()
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ### Days (Test)
 
@@ -343,37 +342,84 @@ train %>%
   ggplot(aes(x=season, y=count, fill=season)) + geom_boxplot()
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 train %>%
   ggplot(aes(x=holiday, y=count, fill=holiday)) + geom_boxplot()
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
 train %>%
   ggplot(aes(x=workingday, y=count, fill=workingday)) + geom_boxplot()
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
 ``` r
 train %>%
   ggplot(aes(x=weather, y=count, fill=weather)) + geom_boxplot()
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+
+``` r
+# train[5632,]
+# 
+# train[7551,]
+# 
+# train[8625,]
+# 
+
+train[9911,]
+```
+
+    ## # A tibble: 1 x 16
+    ##   datetime            season holiday workingday weather  temp atemp
+    ##   <dttm>              <fct>  <fct>   <fct>      <fct>   <dbl> <dbl>
+    ## 1 2012-10-17 07:00:00 Winter No      Yes        Great    14.8  18.2
+    ## # ... with 9 more variables: humidity <dbl>, windspeed <dbl>,
+    ## #   casual <dbl>, registered <dbl>, count <dbl>, year <dbl>, month <ord>,
+    ## #   day <dbl>, hour <dbl>
+
+``` r
+train[9887,]
+```
+
+    ## # A tibble: 1 x 16
+    ##   datetime            season holiday workingday weather  temp atemp
+    ##   <dttm>              <fct>  <fct>   <fct>      <fct>   <dbl> <dbl>
+    ## 1 2012-10-16 07:00:00 Winter No      Yes        Great    17.2  21.2
+    ## # ... with 9 more variables: humidity <dbl>, windspeed <dbl>,
+    ## #   casual <dbl>, registered <dbl>, count <dbl>, year <dbl>, month <ord>,
+    ## #   day <dbl>, hour <dbl>
+
+``` r
+train <- train %>%
+  filter(!datetime=='2012-01-09 18:00:00')
+# 
+# 
+# testy <- train %>%
+#   filter(month=='August' & day==1)
+# 
+# testy
+```
 
 ### Model Fitting
 
 ``` r
 model.base.formula = count ~ season + 
-                             holiday +
-                             workingday + 
                              weather + 
-                             windspeed
+                             windspeed + 
+                             temp + 
+                             year + 
+                             month +
+                             day + 
+                             hour 
+  
+  # datetime
 
 
 model  <- lm(formula = model.base.formula, data = train)
@@ -381,10 +427,128 @@ model  <- lm(formula = model.base.formula, data = train)
 plot(model)
 ```
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
+    ## Warning: not plotting observations with leverage one:
+    ##   5632
 
-    ## Warning in sqrt(crit * p * (1 - hh)/hh): NaNs produced
-    
-    ## Warning in sqrt(crit * p * (1 - hh)/hh): NaNs produced
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
-![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-10-4.png)<!-- -->
+    ## Warning: not plotting observations with leverage one:
+    ##   5632
+
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+
+``` r
+summary(model)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = model.base.formula, data = train)
+    ## 
+    ## Residuals:
+    ##     Min      1Q  Median      3Q     Max 
+    ## -352.21  -94.39  -27.95   65.74  644.11 
+    ## 
+    ## Coefficients: (3 not defined because of singularities)
+    ##                  Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)    -1.683e+05  5.582e+03 -30.154  < 2e-16 ***
+    ## seasonSummer   -1.482e+01  1.936e+01  -0.765 0.444093    
+    ## seasonFall     -3.622e+01  2.046e+01  -1.771 0.076655 .  
+    ## seasonWinter   -3.413e+01  1.897e+01  -1.800 0.071929 .  
+    ## weatherGood    -1.774e+01  3.206e+00  -5.533 3.22e-08 ***
+    ## weatherAverage -7.988e+01  5.209e+00 -15.336  < 2e-16 ***
+    ## weatherPoor     2.714e-01  1.433e+02   0.002 0.998489    
+    ## windspeed       1.422e+00  1.752e-01   8.114 5.43e-16 ***
+    ## temp            1.100e+01  3.830e-01  28.723  < 2e-16 ***
+    ## year            8.363e+01  2.776e+00  30.129  < 2e-16 ***
+    ## month.L         8.300e+01  2.340e+01   3.547 0.000392 ***
+    ## month.Q         8.452e+01  2.568e+01   3.291 0.001001 ** 
+    ## month.C         3.017e+01  1.078e+01   2.800 0.005126 ** 
+    ## month^4        -4.088e+01  1.109e+01  -3.687 0.000228 ***
+    ## month^5        -4.488e+01  1.213e+01  -3.701 0.000216 ***
+    ## month^6         1.205e+01  6.447e+00   1.869 0.061588 .  
+    ## month^7         2.894e+01  7.657e+00   3.779 0.000158 ***
+    ## month^8        -1.059e+01  9.926e+00  -1.067 0.286175    
+    ## month^9                NA         NA      NA       NA    
+    ## month^10               NA         NA      NA       NA    
+    ## month^11               NA         NA      NA       NA    
+    ## day             2.544e-01  2.510e-01   1.014 0.310829    
+    ## hour            8.450e+00  2.103e-01  40.181  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 143.2 on 10865 degrees of freedom
+    ## Multiple R-squared:  0.3759, Adjusted R-squared:  0.3748 
+    ## F-statistic: 344.4 on 19 and 10865 DF,  p-value: < 2.2e-16
+
+``` r
+ols_plot_resid_lev(model)
+```
+
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
+
+``` r
+train %>%
+  ggplot(aes(x = temp, y = count)) + 
+  geom_point(alpha = 0.3) + 
+  geom_smooth(method = 'lm')
+```
+
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
+train %>%
+  ggplot(aes(x = windspeed, y = count)) + 
+  geom_point(alpha = 0.3)
+```
+
+![](Exploratory_Data_Analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
+head(train)
+```
+
+    ## # A tibble: 6 x 16
+    ##   datetime            season holiday workingday weather  temp atemp
+    ##   <dttm>              <fct>  <fct>   <fct>      <fct>   <dbl> <dbl>
+    ## 1 2011-01-01 00:00:00 Spring No      No         Great    9.84  14.4
+    ## 2 2011-01-01 01:00:00 Spring No      No         Great    9.02  13.6
+    ## 3 2011-01-01 02:00:00 Spring No      No         Great    9.02  13.6
+    ## 4 2011-01-01 03:00:00 Spring No      No         Great    9.84  14.4
+    ## 5 2011-01-01 04:00:00 Spring No      No         Great    9.84  14.4
+    ## 6 2011-01-01 05:00:00 Spring No      No         Good     9.84  12.9
+    ## # ... with 9 more variables: humidity <dbl>, windspeed <dbl>,
+    ## #   casual <dbl>, registered <dbl>, count <dbl>, year <dbl>, month <ord>,
+    ## #   day <dbl>, hour <dbl>
+
+``` r
+## To test in Kaggle, submit the produced "submit" file
+test$count <- predict.lm(model, test)
+```
+
+    ## Warning in predict.lm(model, test): prediction from a rank-deficient fit
+    ## may be misleading
+
+``` r
+test <- test %>%
+  mutate(count = floor(ifelse(count < 0, 0, count)))
+         
+head(test)
+```
+
+    ## # A tibble: 6 x 14
+    ##   datetime            season holiday workingday weather  temp atemp
+    ##   <dttm>              <fct>  <fct>   <fct>      <fct>   <dbl> <dbl>
+    ## 1 2011-01-20 00:00:00 Spring No      Yes        Great   10.7   11.4
+    ## 2 2011-01-20 01:00:00 Spring No      Yes        Great   10.7   13.6
+    ## 3 2011-01-20 02:00:00 Spring No      Yes        Great   10.7   13.6
+    ## 4 2011-01-20 03:00:00 Spring No      Yes        Great   10.7   12.9
+    ## 5 2011-01-20 04:00:00 Spring No      Yes        Great   10.7   12.9
+    ## 6 2011-01-20 05:00:00 Spring No      Yes        Great    9.84  11.4
+    ## # ... with 7 more variables: humidity <dbl>, windspeed <dbl>, year <dbl>,
+    ## #   month <ord>, day <dbl>, hour <dbl>, count <dbl>
+
+``` r
+# submit <- test %>% subset(select=c(datetime, count))
+# write.csv(submit, file = "./kaggle_submission.csv", row.names = F)
+```

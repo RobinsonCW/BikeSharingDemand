@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r libraries, quietely=TRUE, warn.conflicts=FALSE}
 library(tidyverse)
 library(lubridate)
-
+library(olsrr)
 ```
 
 ### Load the csv data
@@ -41,13 +41,6 @@ colnames(train)
 
 ```
 
-### Example Output (Train)
-
-```{r}
-
-head(train)
-
-```
 
 
 ### Example Output (Train)
@@ -150,17 +143,18 @@ table(train$season)
 train$holiday <- factor(train$holiday, labels = c("No", "Yes"))
 test$holiday <- factor(test$holiday, labels = c("No", "Yes"))
 
-table(test$holiday)
+table(train$holiday)
 
 train$workingday <- factor(train$workingday, labels = c("No", "Yes"))
 test$workingday <- factor(test$workingday, labels = c("No", "Yes"))
 
+table(train$workingday)
 
 train$weather <- factor(train$weather, labels = c("Great", "Good", "Average", "Poor"))
 test$weather <- factor(test$weather, labels = c("Great", "Good", "Average", "Poor"))
 
 
-table(test$weather)
+table(train$weather)
 
 
 ```
@@ -289,8 +283,35 @@ train %>%
 train %>%
   ggplot(aes(x=weather, y=count, fill=weather)) + geom_boxplot()
 
+
+
+
 ```
 
+
+```{r t}
+# train[5632,]
+# 
+# train[7551,]
+# 
+# train[8625,]
+# 
+
+train[9911,]
+
+train[9887,]
+
+
+train <- train %>%
+  filter(!datetime=='2012-01-09 18:00:00')
+# 
+# 
+# testy <- train %>%
+#   filter(month=='August' & day==1)
+# 
+# testy
+
+```
 
 
 ### Model Fitting
@@ -299,15 +320,65 @@ train %>%
 ```{r}
 
 model.base.formula = count ~ season + 
-                             holiday +
-                             workingday + 
                              weather + 
-                             windspeed
+                             windspeed + 
+                             temp + 
+                             year + 
+                             month +
+                             day + 
+                             hour 
+  
+  # datetime
 
 
 model  <- lm(formula = model.base.formula, data = train)
 
 plot(model)
 
+summary(model)
+
+ols_plot_resid_lev(model)
+
 ```
+
+
+```{r}
+
+train %>%
+  ggplot(aes(x = temp, y = count)) + 
+  geom_point(alpha = 0.3) + 
+  geom_smooth(method = 'lm')
+  
+
+```
+
+
+
+```{r}
+train %>%
+  ggplot(aes(x = windspeed, y = count)) + 
+  geom_point(alpha = 0.3)
+  
+
+```
+
+
+```{r}
+
+head(train)
+
+## To test in Kaggle, submit the produced "submit" file
+test$count <- predict.lm(model, test)
+
+
+test <- test %>%
+  mutate(count = floor(ifelse(count < 0, 0, count)))
+         
+head(test)
+
+# submit <- test %>% subset(select=c(datetime, count))
+# write.csv(submit, file = "./kaggle_submission.csv", row.names = F)
+```
+
+
 
