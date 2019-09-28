@@ -18,6 +18,9 @@ bike_train<-read.csv("train.csv")
 library(car)
 library(ggplot2)
 library(sqldf)
+library(leaps)
+library(corrplot)
+library(MASS)
 
 ```
 
@@ -28,8 +31,16 @@ library(sqldf)
 # convert datetime to just date
 bike_train[,"date_conv"] <- as.Date(as.POSIXct(bike_train$datetime))
 
+# log convert registered
+bike_train[,"log_registered"] <- log(bike_train$registered)
+
 # first couple of rows
 head(bike_train)
+
+# summary of the data set
+
+# more detail about the data set
+str(bike_train)
 
 ```
 
@@ -58,28 +69,108 @@ plot(bike_train$registered,bike_train$atemp, xlab="registered",ylab="atemp", col
 ```
 
 
-## Examine the first couple of rows
+## Plot the data
 ```{r sect3}
 
-# average temperature per day
-avg_temp_day <- data.frame(sqldf("SELECT date_conv, avg(temp) FROM bike_train GROUP BY date_conv ORDER BY date_conv DESC")) 
-avg_temp_day
+# average rentals per day and  season
+avg_count_day <- data.frame(sqldf("SELECT date_conv, season, avg(count) as 'avgcount' FROM bike_train GROUP BY date_conv, season ORDER BY date_conv DESC")) 
 
-# max temperature day
-max_temp <- data.frame(sqldf("SELECT date_conv, max(temp) FROM bike_train"))
-max_temp
+# plot average count per day - increasing trend
+ggplot(avg_count_day, aes(x=date_conv, y=avgcount, color=season)) + geom_point(data = avg_count_day) + geom_line(data = avg_count_day)+ggtitle("Bikes Rented By Date")
 
-# min temperature day
-min_temp <- data.frame(sqldf("SELECT date_conv, min(temp) FROM bike_train"))
-min_temp
+```
+
+
+## Test the correlation between predictors
+```{r sect5}
+
+# build a correlation plot to test the correlation between predictors
+# atemp seems to be highly correlated with temp
+bt <- bike_train[,2:9]
+bt_cor <- cor(bt)
+corrplot(train_cor, method = 'color', addCoef.col="black")
+
+```
+
+
+## Testing the ASE score for the available predictors
+```{r sect6}
+
+# set up the initial ASE feed
+reg.fwd=regsubsets(registered~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual ,data=bike_train,method="forward",nvmax=9)
+
+# Test ASE prediction
+predict.regsubsets =function (object , newdata ,id ,...){
+  form=as.formula (object$call [[2]])
+  mat=model.matrix(form ,newdata )
+  coefi=coef(object ,id=id)
+  xvars=names(coefi)
+  mat[,xvars]%*%coefi
+}
+
+testASE<-c()
+for (i in 1:9){
+  predictions<-predict.regsubsets(object=reg.fwd,newdata=bike_train,id=i) 
+  testASE[i]<-mean(bike_train$registered-predictions)
+}
+
+# plot the ASE model
+par(mfrow=c(1,1))
+plot(1:9,testASE,type="l",xlab="# of predictors",ylab="test vs train ASE")
+index<-which(testASE==min(testASE))
+points(index,testASE[index],col="red",pch=10)
+rss<-summary(reg.fwd)$rss
+lines(1:9,rss/10886,lty=3,col="blue")  # Dividing by 10886 since ASE=RSS/sample size
+
+```
+
+## Build full fit model
+```{r sect8}
+
+# full fit model
+full.fit<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual
+                ,data=bike_train)
+
+# adj R2 = 0.5514;
+summary(full.fit)
 
 
 ```
 
 
+## Look at residual Plots
+```{r sect9}
+
+# set the panel to 2x2
+par(mfrow = c(2, 2))
+plot(full.fit)
+
+```
+
+## Stepwise modelling for variable selection
+```{r sect10}
+full.fit.step<-stepAIC(full.fit, direction="both")
+summary(full.fit.step)
+```
+
+
+## Try stepwise model recommendation
+```{r sect11}
+
+full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+                ,data=bike_train)
+
+# R2 .5514
+summary(full.fit.step)
+
+# try polynomail transformation
+full.fit.step<-lm(poly(count,3)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+                ,data=bike_train)
+
+# R2 .4011
+summary(full.fit.step)
 
 
 
 
-
-
+```
