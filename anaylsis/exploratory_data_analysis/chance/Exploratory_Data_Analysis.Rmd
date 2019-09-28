@@ -19,8 +19,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r libraries, quietely=TRUE, warn.conflicts=FALSE}
 library(tidyverse)
+# Date manipulation
 library(lubridate)
+# Plotting
 library(olsrr)
+# RMLSE
+library(MLmetrics)
 ```
 
 ### Load the csv data
@@ -166,24 +170,20 @@ table(train$weather)
 - Year, Month, Day and Hour
 
 ```{r}
+
 library(lubridate)
 
-
-
 train <- train %>%
-  mutate(year = as.numeric(format(datetime, format = "%Y")), 
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
          month = as.numeric(format(datetime, format = "%m")), 
-         day = as.numeric(format(datetime, format = "%d")),
-         hour = as.numeric(format(datetime, format = "%H")))
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
 
 test <- test %>%
-  mutate(year = as.numeric(format(datetime, format = "%Y")), 
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
          month = as.numeric(format(datetime, format = "%m")), 
-         day = as.numeric(format(datetime, format = "%d")),
-         hour = as.numeric(format(datetime, format = "%H")))
-
-
-
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
 
 
 ```
@@ -259,12 +259,63 @@ test %>%
 
 ```
 
+### Outlier
+
 ```{r}
-head(train)
+
+outliers <- train[   train$count > mean(train$count) + (sd(train$count) * 2), ]
+
+outliers
+
+train <- train %>%
+  filter(!datetime %in% outliers$datetime)
+
+
+## maybe remove observations where the count is more than 2-3 SDs from the mean of the month instead?
+
+train %>%
+  group_by(month) %>%
+  summarize(mean = mean(count), sd = sd(count), median = median(count), count = n()) %>%
+  arrange(desc(month)) 
+
+
+train[5632,]
+
+
+train <- train %>%
+  filter(!datetime=='2012-01-09 18:00:00')
+
+train
+
 ```
 
 
 ### Explanatory Variable plots against Response Variable
+
+#### Continuous Variables
+
+```{r}
+
+train %>%
+  ggplot(aes(x = temp, y = count)) + 
+  geom_point(alpha = 0.3) + 
+  scale_x_continuous(breaks = seq(from = 0, to = 45, by = 2)) + 
+  geom_smooth(method = 'lm')
+  
+
+```
+
+
+```{r}
+train %>%
+  ggplot(aes(x = windspeed, y = count)) + 
+  geom_point(alpha = 0.3) + 
+  scale_x_continuous(breaks = seq(from = 0, to = 45, by = 2)) + 
+  geom_smooth(method = 'lm')
+
+```
+
+#### Categorical Variables
 
 ```{r}
 
@@ -284,32 +335,13 @@ train %>%
   ggplot(aes(x=weather, y=count, fill=weather)) + geom_boxplot()
 
 
+train %>%
+  ggplot(aes(x=month, y=count, fill=month)) + geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
-```
 
 
-```{r t}
-# train[5632,]
-# 
-# train[7551,]
-# 
-# train[8625,]
-# 
-
-train[9911,]
-
-train[9887,]
-
-
-train <- train %>%
-  filter(!datetime=='2012-01-09 18:00:00')
-# 
-# 
-# testy <- train %>%
-#   filter(month=='August' & day==1)
-# 
-# testy
 
 ```
 
@@ -319,14 +351,12 @@ train <- train %>%
 
 ```{r}
 
-model.base.formula = count ~ season + 
-                             weather + 
+model.base.formula = count ~ weather + 
                              windspeed + 
                              temp + 
-                             year + 
                              month +
-                             day + 
-                             hour 
+                             hour +
+                             month:hour
   
   # datetime
 
@@ -342,43 +372,33 @@ ols_plot_resid_lev(model)
 ```
 
 
+### RMSLE: Root Mean Squared Logarithmic Error Loss
 ```{r}
 
-train %>%
-  ggplot(aes(x = temp, y = count)) + 
-  geom_point(alpha = 0.3) + 
-  geom_smooth(method = 'lm')
-  
-
-```
-
-
-
-```{r}
-train %>%
-  ggplot(aes(x = windspeed, y = count)) + 
-  geom_point(alpha = 0.3)
-  
+RMSLE(y_pred = floor(ifelse(model$fitted.values < 0, 0, model$fitted.values)), y_true = train$count)
 
 ```
 
 
 ```{r}
-
-head(train)
 
 ## To test in Kaggle, submit the produced "submit" file
 test$count <- predict.lm(model, test)
 
-
+# when less that 0, replace
 test <- test %>%
   mutate(count = floor(ifelse(count < 0, 0, count)))
          
-head(test)
-
 # submit <- test %>% subset(select=c(datetime, count))
 # write.csv(submit, file = "./kaggle_submission.csv", row.names = F)
+
+# Kaggle Score:  RMSLE = 0.92322
+score = (1 - (2736 / 3201)) * 100
+
+score
 ```
+
+
 
 
 
