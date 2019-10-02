@@ -1,6 +1,6 @@
 # Bike Sharing Demand
 
-Created by [Chance Robinson](https://github.com/RobinsonCW), [Jayson Barker] and [Neha Dixit].
+Created by [Chance Robinson](https://github.com/RobinsonCW), [Jayson Barker](https://github.com/jays567) and [Neha Dixit](https://github.com/nehadixit25).
 
 ## Purpose
 

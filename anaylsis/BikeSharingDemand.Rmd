@@ -1,0 +1,138 @@
+---
+title: "Regression Analysis of the Bike Sharing Demand"
+author: "Chance Robinson, Jayson Barker and Neha Dixit"
+date: |
+  Master of Science in Data Science, Southern Methodist University, USA
+lang: en-US
+class: man
+numbersections: true
+encoding: UTF-8
+bibliography: references.bib
+biblio-style: apalike
+output:
+  bookdown::pdf_document2:
+     citation_package: natbib
+     keep_tex: true
+     toc: false
+header-includes:
+   - \usepackage{amsmath}
+   - \usepackage[utf8]{inputenc}
+   - \usepackage[T1]{fontenc}
+   - \usepackage{setspace}
+   - \usepackage{hyperref}
+   - \onehalfspacing
+   - \setcitestyle{numbers,square,super}
+   - \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, lib-read, results='hide', message=FALSE, include=FALSE, echo=FALSE}
+setwd('.')
+
+# library imports
+library(tidyverse)
+
+# seed data
+set.seed(12345)
+
+
+```
+
+
+# Introduction
+
+[Intro]
+
+
+# Data Description
+
+[Capital Bikeshare program Data Set]
+
+
+# Objective I Analysis
+
+
+## Question of Interest
+
+
+[Question of Interest]
+
+
+## Model Selection
+
+
+[Lasso, Forward, Backward, Stepwise, Manual]
+
+
+\newpage
+
+
+## Model Assumptions Assessment
+
+* One
+* Two
+* Three 
+
+## Comparing Competing Models
+
+[Comparing Competing Models]
+
+\newpage
+
+## Parameters
+
+[Parameters]
+
+## Model Interpretation
+
+[Model Interpretation]
+
+
+## Conclusion
+
+[Conclusion]
+
+\newpage
+
+# Objective II Analysis
+
+
+## Question of Interest
+
+
+[Discuss time series method]
+
+
+**Time-Series Analysis**
+
+
+[Details goe here]
+
+
+## Model Assumption Assessment
+
+
+[Model Assumption Assessment]
+
+
+## Comparing Competing Models
+
+
+## Conclusion
+
+
+[Conclusion]
+
+
+\newpage
+
+# Appendix
+
+## Explorator Data Analysis
+
+## Code
+
+\newpage
+
+# References
