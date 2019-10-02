@@ -8,15 +8,15 @@ Multiple linear regression project with temporal component for prediction of bik
 
 ## Analysis Files
 
-* [Regression Analysis Paper (pdf)]: A paper covering the analysis. 
-* [Regression Analysis (Rmd)]: An R-markdown file with the analysis.
+* [Regression Analysis Paper (pdf)](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/BikeSharingDemand.pdf): A paper covering the analysis. 
+* [Regression Analysis (Rmd)](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/BikeSharingDemand.Rmd): An R-markdown file with the analysis.
 
 ## Data
 
 The [data description] contains general information features of the dataset. The dataset [readme] provides a reference for the dataset. The data was pre-split into training and testing sets by Kaggle.com.
 
-* [`test.csv`]: the testing dataset.
-* [`train.csv`]: the training dataset.
+* [`test.csv`](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/data/test.csv): the testing dataset.
+* [`train.csv`](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/data/train.csv): the training dataset.
 
 ## Codebook
 
