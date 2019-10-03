@@ -21,6 +21,7 @@ library(sqldf)
 library(leaps)
 library(corrplot)
 library(MASS)
+library(dplyr)
 
 ```
 
@@ -88,7 +89,7 @@ ggplot(avg_count_day, aes(x=date_conv, y=avgcount, color=season)) + geom_point(d
 # atemp seems to be highly correlated with temp
 bt <- bike_train[,2:9]
 bt_cor <- cor(bt)
-corrplot(train_cor, method = 'color', addCoef.col="black")
+corrplot(bt_cor, method = 'color', addCoef.col="black")
 
 ```
 
@@ -113,6 +114,8 @@ for (i in 1:9){
   predictions<-predict.regsubsets(object=reg.fwd,newdata=bike_train,id=i) 
   testASE[i]<-mean(bike_train$registered-predictions)
 }
+
+testASE
 
 # plot the ASE model
 par(mfrow=c(1,1))
@@ -153,9 +156,8 @@ full.fit.step<-stepAIC(full.fit, direction="both")
 summary(full.fit.step)
 ```
 
-
 ## Try stepwise model recommendation
-```{r sect11}
+```{r sect13}
 
 full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
                 ,data=bike_train)
@@ -163,14 +165,52 @@ full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + working
 # R2 .5514
 summary(full.fit.step)
 
-# try polynomail transformation
-full.fit.step<-lm(poly(count,3)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+# AIC compare - 135377
+AIC(full.fit.step)
+
+# BIC compare - 135457
+BIC(full.fit.step)
+
+# try log transformation
+full.fit.step.log<-lm(log(count)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
                 ,data=bike_train)
 
 # R2 .4011
-summary(full.fit.step)
+summary(full.fit.step.log)
 
+# AIC compare - 34124
+AIC(full.fit.step.log)
 
+# BIC compare - 34205
+BIC(full.fit.step.log)
 
+# Using Lasso via SAS, the suggested model is below RMSE (Lasso): 122.6  |  RMSE LM approach: 121.3
+SAS.Lasso <- lm(count ~ humidity + windspeed + atemp + weather + workingday + holiday + season ,data=bike_train)
+summary(SAS.Lasso)
+
+# build the model for scoring
+model.base.formula = count ~ weather + 
+                             windspeed + 
+                             atemp +
+                             weather +
+                             workingday + 
+                             holiday +
+                             season
+
+# store the model for scoring
+model  <- lm(formula = model.base.formula, data = bike_train)
+                            
+# apply the model to the test data set                             
+bike_test$count <- predict.lm(model, bike_test)
+
+# when less that 0, replace
+# bike_test <- bike_test %>%
+  # mutate(count = floor(ifelse(count < 0, 0, count)))
+
+# prepare Kaggle submission  
+# submit <- bike_test %>% subset(select=c(datetime, count))
+# write.csv(submit, file = "./kaggle_submission.csv", row.names = F)
 
 ```
+
+

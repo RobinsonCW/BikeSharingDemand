@@ -3,28 +3,6 @@ title: "Regression Analysis of the Bike Sharing Demand"
 author: "Chance Robinson, Jayson Barker and Neha Dixit"
 date: |
   Master of Science in Data Science, Southern Methodist University, USA
-lang: en-US
-class: man
-numbersections: true
-encoding: UTF-8
-bibliography: references.bib
-biblio-style: apalike
-output:
-  bookdown::pdf_document2:
-     citation_package: natbib
-     keep_tex: true
-     toc: false
-header-includes:
-   - \usepackage{amsmath}
-   - \usepackage[utf8]{inputenc}
-   - \usepackage[T1]{fontenc}
-   - \usepackage{setspace}
-   - \usepackage{hyperref}
-   - \onehalfspacing
-   - \setcitestyle{numbers,square,super}
-   - \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r, lib-read, results='hide', message=FALSE, include=FALSE, echo=FALSE}
@@ -47,7 +25,28 @@ set.seed(12345)
 
 # Data Description
 
-[Capital Bikeshare program Data Set]
+### The dataset we chose for this project was a publicly shared, hourly bike sharing dataset made available through Kaggle in csv format. 
+
+### This data set is divided into two distinct sets – a train and test set. The train set consists of 6,493 rows (titled "train.csv") and the test set consists of 10,886 rows (titled "test.csv"). Within the training set, the first 19 days of each month are captured whereas in the test data set, the 20th day to the end of each month is present. The entirity of the data spans from 1/1/2011 through 12/31/2012 - encompassing two full years of bike sharing data. Interstingly, the time component of this analysis is captured in hours of each day meaning we have a calendar date represented 24 times (for each hour of that day) in the data, along with it's associated attribute values.
+
+### In both sets, there are a total of 12 attributes which capture multiple variables related to bike rentals. Some of these attributes are categorical, and others are continuous. All attributes are summarized in the table below:
+
+Attribute Name | Description
+-------------- | -----------
+datetime       | Hourly date + timestamp
+season         | Categorical factor with three levels: 1 = spring, 2 = summer, 3 = fall, 4 = winter
+holiday        | Binary values indicating if the date is considered a holiday 
+workingday     | Whether the day is neither a weekend nor holiday
+weather        | Categorical factor with 4 levels: 1: Clear, Few clouds, Partly cloudy, Partly cloudy  2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds  4: Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog 
+Temp           | Temperature in Celsius
+Atemp          | “feels like” temperature in Celsius
+humidity       | Relative humidity
+windspeed      | Wind speed
+casual         | Number of non-registered user rentals initiated
+registered     | Number of registered user rentals initiated
+count          | Number of total rentals
+
+### After performing our exploratory data analysis step, we recognized that attributes registered and count were highly correlated which logically makes sense; an individual is very likely to actually rent a unit if the register to rent that unit. Therefore we chose to exclude registered from the analysis both from a statistical perspective (as you will see later in the analysis sections) and also from a practical perspective.
 
 
 # Objective I Analysis
