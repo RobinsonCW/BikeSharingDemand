@@ -101,6 +101,9 @@ any(is.na(train))
 # test
 any(is.na(test))
 
+
+train$count <- log(train$count)
+
 ```
 
 
@@ -263,98 +266,29 @@ test %>%
 
 ```{r}
 
-# 
-# outliers <- train[   train$count > median(train$count) + (sd(train$count) * 2), ]
-# 
-# outliers
 
-# train <- train %>%
-#   filter(!datetime %in% outliers$datetime)
+outliers <- train[   train$count < median(train$count) - (sd(train$count) * 3), ]
+# outliers
 
 
 ## maybe remove observations where the count is more than 2-3 SDs from the mean of the month instead?
 
 train %>%
   group_by(month) %>%
-  summarize(mean = mean(count), sd = sd(count), median = median(count), count = n()) 
+  summarize(mean = mean(count), sd = sd(count), median = median(count), observations = n())
 
 
-train1 <- train %>%
-  filter(month == 'January') %>%
-  filter(count > (65.0 + (95.30252 * 2))) %>%
-  select(datetime)
-
-train2 <- train %>%
-  filter(month == 'February') %>%
-  filter(count > (78.0 + (109.80232	* 2))) %>%
-  select(datetime)
-
-train3 <- train %>%
-  filter(month == 'March') %>%
-  filter(count > (100.0 + (155.35281 * 2))) %>%
-  select(datetime)
-
-train4 <- train %>%
-  filter(month == 'April') %>%
-  filter(count > (133.0 + (182.41762 * 2))) %>%
-  select(datetime)
-
-train5 <- train %>%
-  filter(month == 'May') %>%
-  filter(count > (182.0 + (189.32017 * 2))) %>%
-  select(datetime)
-
-train6 <- train %>%
-  filter(month == 'June') %>%
-  filter(count > (206.0 + (199.62869 * 2))) %>%
-  select(datetime)
-
-train7 <- train %>%
-  filter(month == 'July') %>%
-  filter(count > (209.5 + (184.85734 * 2))) %>%
-  select(datetime)
-
-train8 <- train %>%
-  filter(month == 'August') %>%
-  filter(count > (193.0 + (197.19846	* 2))) %>%
-  select(datetime)
-
-train9 <- train %>%
-  filter(month == 'September') %>%
-  filter(count > (188.0 + (208.91591 * 2))) %>%
-  select(datetime)
-
-train10 <- train %>%
-  filter(month == 'October') %>%
-  filter(count > (180.0 + (204.07941 * 2))) %>%
-  select(datetime)
-
-train11 <- train %>%
-  filter(month == 'November') %>%
-  filter(count > (162.0 + (165.42097 * 2))) %>%
-  select(datetime)
-
-train12 <- train %>%
-  filter(month == 'December') %>%
-  filter(count > (138.0 + (155.92605 * 2))) %>%
-  select(datetime)
-
-
-outliers <- rbind(train1, train2, train3, train4, train5, train6, train7, train8, train9, train10, train11, train12)
-
-outliers
-
+# remove outliers
 train <- train %>%
   filter(!datetime %in% outliers$datetime)
 
 
-# train[5632,]
-# 
-# 
-# train <- train %>%
-#   filter(!datetime=='2012-01-09 18:00:00')
+# train[5555, ] # 2012-01-09 18:00:00
 
-train
+
+train <- train %>%
+  filter(datetime != '2012-01-09 18:00:00')
+
 
 ```
 
@@ -368,6 +302,19 @@ train
 train %>%
   ggplot(aes(x = temp, y = count)) + 
   geom_point(alpha = 0.3) + 
+  scale_x_continuous(breaks = seq(from = 0, to = 45, by = 2.9)) + 
+  geom_smooth(method = 'lm')
+  
+
+```
+
+
+
+```{r}
+
+train %>%
+  ggplot(aes(x = atemp, y = count)) + 
+  geom_point(alpha = 0.3) + 
   scale_x_continuous(breaks = seq(from = 0, to = 45, by = 2)) + 
   geom_smooth(method = 'lm')
   
@@ -376,10 +323,11 @@ train %>%
 
 
 ```{r}
+
 train %>%
   ggplot(aes(x = windspeed, y = count)) + 
   geom_point(alpha = 0.3) + 
-  scale_x_continuous(breaks = seq(from = 0, to = 45, by = 2)) + 
+  scale_x_continuous(breaks = seq(from = 0, to = 45, by=2)) + 
   geom_smooth(method = 'lm')
 
 ```
@@ -407,8 +355,6 @@ train %>%
 train %>%
   ggplot(aes(x=month, y=count, fill=month)) + geom_boxplot() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-
 
 
 
@@ -454,17 +400,21 @@ RMSLE(y_pred = floor(ifelse(model$fitted.values < 0, 0, model$fitted.values)), y
 ## To test in Kaggle, submit the produced "submit" file
 test$count <- predict.lm(model, test)
 
+
+test$count <- exp(test$count)
+
 # when less that 0, replace
 test <- test %>%
-  mutate(count = floor(ifelse(count < 0, 0, count)))
+  mutate(count = round(ifelse(count < 0, 0, count)))
          
 # submit <- test %>% subset(select=c(datetime, count))
 # write.csv(submit, file = "./kaggle_submission.csv", row.names = F)
 
-# Kaggle Score:  RMSLE = 0.89888
-score = (1 - (2722 / 3246)) * 100
+# Kaggle Score:  RMSLE = 0.67458
+score = (1 - (2445 / 3246)) * 100
 
 score
+
 ```
 
 
