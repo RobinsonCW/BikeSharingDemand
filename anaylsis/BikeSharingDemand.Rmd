@@ -1,22 +1,62 @@
 ---
-title: "Regression Analysis of the Bike Sharing Demand"
+title: "Regression Analysis of Bike Sharing Demand"
 author: "Chance Robinson, Jayson Barker and Neha Dixit"
 date: |
   Master of Science in Data Science, Southern Methodist University, USA
-output: pdf_document
+lang: en-US
+class: man
+figsintext: true
+numbersections: true
+encoding: UTF-8
+bibliography: references.bib
+biblio-style: apalike
+output:
+  bookdown::pdf_document2:
+     citation_package: natbib
+     keep_tex: true
+     toc: false
+header-includes:
+   - \usepackage{amsmath}
+   - \usepackage[utf8]{inputenc}
+   - \usepackage[T1]{fontenc}
+   - \usepackage{setspace}
+   - \usepackage{hyperref}
+   - \onehalfspacing
+   - \setcitestyle{numbers,square,super}
+   - \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+editor_options: 
+  chunk_output_type: console
 ---
+
 
 ```{r, lib-read, results='hide', message=FALSE, include=FALSE, echo=FALSE}
 setwd('.')
 
 # library imports
 library(tidyverse)
-
-# seed data
-set.seed(12345)
+# Date manipulation
+library(lubridate)
+# Plotting
+library(olsrr)
+# RMLSE
+library(MLmetrics)
+# Correlation Matrix
+library(ggcorrplot)
 
 
 ```
+
+
+```{r, load-data, results='hide', message=FALSE, include=FALSE, echo=FALSE}
+# seed data
+set.seed(12345)
+
+# read from csv into test and train data sets
+train <- read_csv('./data/train.csv')
+test <- read_csv('./data/test.csv')
+
+```
+
 
 
 # Introduction
@@ -55,16 +95,45 @@ In train data set, there are a total of 12 attributes which capture multiple var
 
 # Exploratory Data Analysis
 
-## Plotting Explanatory vs. Response Variables
+* Plotting Explanatory vs. Response Variables
 
-### Categorical Variables
+
+```{r, categorical-factors, results='hide', message=FALSE, include=FALSE, echo=FALSE}
+
+# copy the test and train data sets for EDA
+train.mod.1 <- train
+test.mod.1 <- test
+
+train.mod.1$season <- factor(train.mod.1$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+test.mod.1$season <- factor(test.mod.1$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+
+table(train.mod.1$season)
+
+train.mod.1$holiday <- factor(train.mod.1$holiday, labels = c("No", "Yes"))
+test.mod.1$holiday <- factor(test.mod.1$holiday, labels = c("No", "Yes"))
+
+table(train.mod.1$holiday)
+
+train.mod.1$workingday <- factor(train.mod.1$workingday, labels = c("No", "Yes"))
+test.mod.1$workingday <- factor(test.mod.1$workingday, labels = c("No", "Yes"))
+
+table(train.mod.1$workingday)
+
+train.mod.1$weather <- factor(train.mod.1$weather, labels = c("Great", "Good", "Average", "Poor"))
+test.mod.1$weather <- factor(test.mod.1$weather, labels = c("Great", "Good", "Average", "Poor"))
+
+table(train.mod.1$weather)
+
+
+```
+
+
+
+## Categorical Variables
 
 Several numeric variables were found to be better suited to categorization and were converted to factors.
 
-* Season
-* Holiday
-* Working Day
-* Weather
+### Season
 
 Season           |Label                 |Description
 -----------------|--------------------- |------------------------------------------------
@@ -73,6 +142,55 @@ Season           |Label                 |Description
 3                | Fall                 | Jun 21 ~ Sep 20
 4                | Winter               | Sep 21 ~ Dec 20
 
+```{r, train.mod.1.season, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x=season, y=count, fill=season)) + geom_boxplot()
+
+
+```
+
+
+\newpage
+
+#### Holiday
+
+```{r, train.mod.1.holiday, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x=holiday, y=count, fill=holiday)) + geom_boxplot()
+
+
+```
+
+
+### Working Day
+
+
+```{r, train.mod.1.workingday, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x=workingday, y=count, fill=workingday)) + geom_boxplot()
+
+
+```
+
+
+
+\newpage
+
+### Weather
+
+
+```{r, train.mod.1.weather, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x=weather, y=count, fill=weather)) + geom_boxplot()
+
+
+```
+
+
 The datetime column was broken out into multiple factors as well so that we could visualize the components of each date and aggregate by different dimensions of the timestamp.  We felt this was also necessary due to the nature of how the train/ test data sets had been pre-split.  (i.e...with the first 19 days of the month holding the only true counts to validate our models against.)
 
 * Year
@@ -80,22 +198,128 @@ The datetime column was broken out into multiple factors as well so that we coul
 * Day
 * Hour
 
-### Continuous Variables
 
-* Count by Temperature
+```{r, split-date, results='hide', message=FALSE, include=FALSE, echo=FALSE}
 
-* Count by "Feels like" Temperature
+library(lubridate)
 
-* Count by Wind Speed
+train.mod.1 <- train.mod.1 %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
+
+test.mod.1 <- test.mod.1 %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
 
 
-### Correlation Matrix
+# train.mod.1
+# test.mod.1
 
-There are several variables with a relatively high level of covariance.  The following columns should therefore be removed so as not to be picked up by any automated techniques. 
+# Convert Months to Ordered Factor 
+train.mod.1$month <-month(train.mod.1$datetime, label = TRUE, abbr = FALSE)
+test.mod.1$month <-month(test.mod.1$datetime, label = TRUE, abbr = FALSE)
+
+```
+
+
+### Month
+
+```{r, train.mod.1.month, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x=month, y=count, fill=month)) + geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+```
+
+
+
+\newpage
+
+
+## Continuous Variables
+
+### Count by Temperature
+
+```{r, train.mod.1.temp, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x = temp, y = count)) + 
+  geom_point(alpha = 0.3) + 
+  scale_x_continuous(breaks = seq(from = 0, to = 45, by = 2)) + 
+  geom_smooth(method = 'lm')
+
+```
+
+
+\newpage
+
+### Count by "Feels like" Temperature
+
+
+```{r, train.mod.1.atemp, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x = atemp, y = count)) + 
+  geom_point(alpha = 0.3) + 
+  scale_x_continuous(breaks = seq(from = 0, to = 45, by = 2)) + 
+  geom_smooth(method = 'lm')
+
+```
+
+
+\newpage
+
+### Count by Wind Speed
+
+
+```{r, train.mod.1.windspeed, echo=FALSE}
+
+train.mod.1 %>%
+  ggplot(aes(x = windspeed, y = count)) + 
+  geom_point(alpha = 0.3) + 
+  scale_x_continuous(breaks = seq(from = 0, to = 60, by=2)) + 
+  geom_smooth(method = 'lm')
+
+```
+
+
+
+\newpage
+
+## Correlation Matrix
+
+There are several variables with a relatively high level of covariance from the training set.  The following columns should therefore be removed so as not to be picked up by any automated modelling techniques. 
 
 * atemp
 * causual 
 * registered
+
+
+```{r, train.mod.1.corr.matrix, echo=FALSE}
+
+train.mod.1.numeric <- train.mod.1 %>%
+  select_if(is.numeric)
+
+
+corr <- round(cor(train.mod.1.numeric), 1)
+  
+ggcorrplot(corr, method = "circle")
+
+
+train.mod.1$atemp <- NULL
+train.mod.1$casual <- NULL
+train.mod.1$registered <- NULL
+
+# train.mod.1
+
+
+```
 
 
 
@@ -107,13 +331,79 @@ There are several variables with a relatively high level of covariance.  The fol
 ## Question of Interest
 
 
-[Question of Interest]
+The team be utilizing the multiple linear regression techniques we've learned up to this point in the program to predict the bike rental deman on a given date and time.  The model will be evaluated on the Root Mean Squared Logarithmic Error, or RMSLE.  As this data represents hourly data collected, there is an obvious time component associated with this particular competition.  We wanted to gauge how effective mutiple linear regression would be when the assumption of indepdence is clearly violated.
+
+
+```{r remove-outliers, echo=FALSE}
+
+# log transform the response variable
+train.mod.1$count <- log(train.mod.1$count)
+
+
+train.mod.1 %>%
+  group_by(month) %>%
+  summarize(mean = mean(count), sd = sd(count), median = median(count), observations = n())
+
+
+outliers <- train.mod.1[   train.mod.1$count < median(train.mod.1$count) - (sd(train.mod.1$count) * 3), ]
+
+
+# remove outliers
+train.mod.1 <- train.mod.1 %>%
+  filter(!datetime %in% outliers$datetime)
+
+
+train[5555, ] # 2012-01-09 18:00:00
+
+
+train.mod.1 <- train.mod.1 %>%
+  filter(datetime != '2012-01-09 18:00:00')
+
+
+
+# train.mod.1  %>%
+#   ggplot(aes(x=month, y=count, fill=month)) + geom_boxplot() + 
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
 
 
 ## Model Selection
 
+### Custom Variable Selection 
 
-[Lasso, Forward, Backward, Stepwise, Manual]
+We developed the best fitting model with a custom selection of variables after having accounted for those with high correlation and adding interactive terms such as month/ hour based on the seasonal nature that the box plots exhibited.
+
+```{r, custom-model, echo=FALSE}
+
+custom.model.formula = count ~ weather + 
+                             windspeed + 
+                             temp + 
+                             month +
+                             hour +
+                             month:hour
+
+
+custom.model  <- lm(formula = custom.model.formula, data = train.mod.1)
+
+plot(custom.model)
+
+# summary(custom.model)
+
+ols_plot_resid_lev(custom.model)
+
+```
+
+### RMSLE: Root Mean Squared Logarithmic Error Loss
+```{r, cutom-rmsle, echo=FALSE}
+
+RMSLE(y_pred = floor(ifelse(custom.model$fitted.values < 0, 0, custom.model$fitted.values)), y_true = train.mod.1$count)
+
+```
+
+
+### Lasso
+### Stepwise
 
 
 \newpage
@@ -121,13 +411,16 @@ There are several variables with a relatively high level of covariance.  The fol
 
 ## Model Assumptions Assessment
 
-* One
-* Two
-* Three 
+* The response variable is linear
+* The data is normally distributed
+* Independence
 
 ## Comparing Competing Models
 
-[Comparing Competing Models]
+
+
+
+
 
 \newpage
 
