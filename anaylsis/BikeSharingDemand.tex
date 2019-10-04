@@ -37,6 +37,46 @@
 \fi
 \usepackage{natbib}
 \bibliographystyle{apalike}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
 \makeatletter
@@ -295,6 +335,78 @@ The team be utilizing the multiple linear regression techniques we've learned up
 \hypertarget{model-selection}{%
 \subsection{Model Selection}\label{model-selection}}
 
+\hypertarget{lasso}{%
+\subsubsection{Lasso}\label{lasso}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{split.perc =}\StringTok{ }\FloatTok{.80}
+
+\NormalTok{train.indices =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(train.mod}\FloatTok{.1}\NormalTok{)[}\DecValTok{1}\NormalTok{],}\KeywordTok{round}\NormalTok{(split.perc }\OperatorTok{*}\StringTok{ }\KeywordTok{dim}\NormalTok{(train.mod}\FloatTok{.1}\NormalTok{)[}\DecValTok{1}\NormalTok{]))}
+
+\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train =}\StringTok{ }\NormalTok{train.mod}\FloatTok{.1}\NormalTok{[train.indices,]}
+\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{test  =}\StringTok{ }\NormalTok{train.mod}\FloatTok{.1}\NormalTok{[}\OperatorTok{-}\NormalTok{train.indices,]}
+
+
+\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train}\OperatorTok{$}\NormalTok{datetime <-}\StringTok{ }\OtherTok{NULL}
+\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{test}\OperatorTok{$}\NormalTok{datetime <-}\StringTok{ }\OtherTok{NULL}
+
+
+\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 8,624 x 12
+##    season holiday workingday weather  temp humidity windspeed count year 
+##    <fct>  <fct>   <fct>      <fct>   <dbl>    <dbl>     <dbl> <dbl> <fct>
+##  1 Fall   No      Yes        Average 28.7        89     13.0   1.61 2012 
+##  2 Spring No      Yes        Great   21.3        27     31.0   4.77 2011 
+##  3 Fall   No      No         Great   28.7        54     11.0   6.17 2012 
+##  4 Winter No      Yes        Great    9.84       75      0     2.30 2011 
+##  5 Spring No      Yes        Good     8.2        34     19.0   4.16 2011 
+##  6 Summer No      No         Good    28.7        48      6.00  5.48 2011 
+##  7 Winter No      Yes        Great   13.9        46     15.0   6.30 2012 
+##  8 Spring No      Yes        Great    9.02       51     20.0   4.04 2011 
+##  9 Fall   No      Yes        Great   20.5        82      0     5.27 2012 
+## 10 Fall   No      Yes        Great   30.3        70     19.0   5.19 2012 
+## # ... with 8,614 more rows, and 3 more variables: month <ord>, day <fct>,
+## #   hour <fct>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{model.matrix}\NormalTok{(count}\OperatorTok{~}\NormalTok{.,train.mod.}\FloatTok{1.}\NormalTok{train)[,}\OperatorTok{-}\DecValTok{7}\NormalTok{]}
+\NormalTok{y <-}\StringTok{ }\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train}\OperatorTok{$}\NormalTok{count}
+
+\NormalTok{grid=}\DecValTok{10}\OperatorTok{^}\KeywordTok{seq}\NormalTok{(}\DecValTok{10}\NormalTok{,}\OperatorTok{-}\DecValTok{2}\NormalTok{, }\DataTypeTok{length =}\DecValTok{100}\NormalTok{)}
+\NormalTok{lasso.model <-}\StringTok{ }\KeywordTok{glmnet}\NormalTok{(x,y,}\DataTypeTok{alpha=}\DecValTok{1}\NormalTok{, }\DataTypeTok{lambda=}\NormalTok{grid)}
+
+\NormalTok{xtest<-}\KeywordTok{model.matrix}\NormalTok{(count}\OperatorTok{~}\NormalTok{.,train.mod.}\FloatTok{1.}\NormalTok{test)[,}\OperatorTok{-}\DecValTok{7}\NormalTok{]}
+\NormalTok{ytest <-}\StringTok{ }\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{test}\OperatorTok{$}\NormalTok{count}
+
+
+\NormalTok{cv.out=}\KeywordTok{cv.glmnet}\NormalTok{(x,y,}\DataTypeTok{alpha=}\DecValTok{1}\NormalTok{) }\CommentTok{#alpha=1 performs LASSO}
+\KeywordTok{plot}\NormalTok{(cv.out)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{BikeSharingDemand_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{best.lambda <-cv.out}\OperatorTok{$}\NormalTok{lambda.min  }\CommentTok{#Optimal penalty parameter.  You can make this call visually.}
+\NormalTok{lasso.pred=}\KeywordTok{predict}\NormalTok{(lasso.model ,}\DataTypeTok{s=}\NormalTok{best.lambda ,}\DataTypeTok{newx=}\NormalTok{xtest)}
+
+\NormalTok{testMSE_LASSO<-}\KeywordTok{mean}\NormalTok{((ytest}\OperatorTok{-}\NormalTok{lasso.pred)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{testMSE_LASSO}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.3535176
+\end{verbatim}
+
 \hypertarget{custom-variable-selection}{%
 \subsubsection{Custom Variable Selection}\label{custom-variable-selection}}
 
@@ -303,16 +415,12 @@ We developed the best fitting model with a custom selection of variables after h
 \begin{verbatim}
 ## Warning: not plotting observations with leverage one:
 ##   5555
-\end{verbatim}
 
-\includegraphics{BikeSharingDemand_files/figure-latex/custom-model-1.pdf} \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-2.pdf}
-
-\begin{verbatim}
 ## Warning: not plotting observations with leverage one:
 ##   5555
 \end{verbatim}
 
-\includegraphics{BikeSharingDemand_files/figure-latex/custom-model-3.pdf} \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-4.pdf} \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-5.pdf}
+\includegraphics{BikeSharingDemand_files/figure-latex/custom-model-1.pdf} \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-2.pdf}
 
 \hypertarget{rmsle-root-mean-squared-logarithmic-error-loss}{%
 \subsubsection{RMSLE: Root Mean Squared Logarithmic Error Loss}\label{rmsle-root-mean-squared-logarithmic-error-loss}}
@@ -320,9 +428,6 @@ We developed the best fitting model with a custom selection of variables after h
 \begin{verbatim}
 ## [1] 0.1923972
 \end{verbatim}
-
-\hypertarget{lasso}{%
-\subsubsection{Lasso}\label{lasso}}
 
 \hypertarget{stepwise}{%
 \subsubsection{Stepwise}\label{stepwise}}

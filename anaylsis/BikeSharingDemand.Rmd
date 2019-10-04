@@ -42,6 +42,8 @@ library(olsrr)
 library(MLmetrics)
 # Correlation Matrix
 library(ggcorrplot)
+# Lasso
+library(glmnet)
 
 
 ```
@@ -370,6 +372,47 @@ train.mod.1 <- train.mod.1 %>%
 
 ## Model Selection
 
+### Lasso
+
+
+```{r}
+
+split.perc = .80
+
+train.indices = sample(1:dim(train.mod.1)[1],round(split.perc * dim(train.mod.1)[1]))
+
+train.mod.1.train = train.mod.1[train.indices,]
+train.mod.1.test  = train.mod.1[-train.indices,]
+
+
+train.mod.1.train$datetime <- NULL
+train.mod.1.test$datetime <- NULL
+
+
+train.mod.1.train
+
+x <- model.matrix(count~.,train.mod.1.train)[,-7]
+y <- train.mod.1.train$count
+
+grid=10^seq(10,-2, length =100)
+lasso.model <- glmnet(x,y,alpha=1, lambda=grid)
+
+xtest<-model.matrix(count~.,train.mod.1.test)[,-7]
+ytest <- train.mod.1.test$count
+
+
+cv.out=cv.glmnet(x,y,alpha=1) #alpha=1 performs LASSO
+plot(cv.out)
+best.lambda <-cv.out$lambda.min  #Optimal penalty parameter.  You can make this call visually.
+lasso.pred=predict(lasso.model ,s=best.lambda ,newx=xtest)
+
+testMSE_LASSO<-mean((ytest-lasso.pred)^2)
+testMSE_LASSO
+
+
+```
+
+
 ### Custom Variable Selection 
 
 We developed the best fitting model with a custom selection of variables after having accounted for those with high correlation and adding interactive terms such as month/ hour based on the seasonal nature that the box plots exhibited.
@@ -386,6 +429,7 @@ custom.model.formula = count ~ weather +
 
 custom.model  <- lm(formula = custom.model.formula, data = train.mod.1)
 
+par(mfrow=c(2,2))
 plot(custom.model)
 
 # summary(custom.model)
@@ -402,7 +446,9 @@ RMSLE(y_pred = floor(ifelse(custom.model$fitted.values < 0, 0, custom.model$fitt
 ```
 
 
-### Lasso
+
+
+
 ### Stepwise
 
 
