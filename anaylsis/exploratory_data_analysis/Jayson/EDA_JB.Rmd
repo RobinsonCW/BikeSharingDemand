@@ -152,36 +152,53 @@ plot(full.fit)
 
 ## Stepwise modelling for variable selection
 ```{r sect10}
+
+# setting working directory
+setwd("F:/SMU/DS6372/Project 1/bike-sharing-demand")
+bike_test<-read.csv("test.csv")
+bike_train<-read.csv("train.csv")
+library(car)
+library(ggplot2)
+library(sqldf)
+library(leaps)
+library(corrplot)
+library(MASS)
+library(dplyr)
+
 full.fit.step<-stepAIC(full.fit, direction="both")
 summary(full.fit.step)
 ```
 
+
+full.fit.step<-stepAIC(full.fit, direction="both")
+summary(full.fit.step)
+
 ## Try stepwise model recommendation
 ```{r sect13}
 
-full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season
                 ,data=bike_train)
 
-# R2 .5514
+# R2 .2604
 summary(full.fit.step)
 
-# AIC compare - 135377
+# AIC compare - 140819
 AIC(full.fit.step)
 
-# BIC compare - 135457
+# BIC compare - 140892.9
 BIC(full.fit.step)
 
 # try log transformation
-full.fit.step.log<-lm(log(count)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+full.fit.step.log<-lm(log(count)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season
                 ,data=bike_train)
 
-# R2 .4011
+# R2 .2576
 summary(full.fit.step.log)
 
-# AIC compare - 34124
+# AIC compare - 36329.35
 AIC(full.fit.step.log)
 
-# BIC compare - 34205
+# BIC compare - 36402.3
 BIC(full.fit.step.log)
 
 # Using Lasso via SAS, the suggested model is below RMSE (Lasso): 122.6  |  RMSE LM approach: 121.3

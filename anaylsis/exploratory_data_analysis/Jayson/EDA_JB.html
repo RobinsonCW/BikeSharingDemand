@@ -633,46 +633,45 @@ plot(full.fit)</code></pre>
 </div>
 <div id="try-stepwise-model-recommendation" class="section level2">
 <h2>Try stepwise model recommendation</h2>
-<pre class="r"><code>full.fit.step&lt;-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+<pre class="r"><code>full.fit.step&lt;-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season
                 ,data=bike_train)
 
-# R2 .5514
+# R2 .5518
 summary(full.fit.step)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = count ~ humidity + windspeed + temp + atemp + weather + 
-##     workingday + holiday + season + casual, data = bike_train)
+##     workingday + holiday + season, data = bike_train)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -371.42  -81.36  -21.38   38.15  608.99 
+## -335.81 -102.67  -31.95   66.44  677.02 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 13.45407    6.93791   1.939 0.052502 .  
-## humidity    -0.67992    0.07748  -8.775  &lt; 2e-16 ***
-## windspeed    0.62565    0.15576   4.017 5.94e-05 ***
-## temp        -1.62185    0.89041  -1.821 0.068565 .  
-## atemp        1.90814    0.81937   2.329 0.019888 *  
-## weather     -2.76480    2.04246  -1.354 0.175872    
-## workingday  95.91560    2.82862  33.909  &lt; 2e-16 ***
-## holiday     23.98490    7.23020   3.317 0.000912 ***
-## season      17.45269    1.11282  15.683  &lt; 2e-16 ***
-## casual       2.61082    0.03108  84.010  &lt; 2e-16 ***
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 135.79052    8.71016  15.590  &lt; 2e-16 ***
+## humidity     -3.05684    0.09262 -33.003  &lt; 2e-16 ***
+## windspeed     0.77762    0.19999   3.888 0.000102 ***
+## temp          1.84737    1.14210   1.618 0.105796    
+## atemp         5.63120    1.05057   5.360 8.49e-08 ***
+## weather       5.93872    2.61924   2.267 0.023389 *  
+## workingday   -1.14953    3.31527  -0.347 0.728795    
+## holiday      -9.15872    9.27009  -0.988 0.323181    
+## season       22.75882    1.42662  15.953  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 121.3 on 10876 degrees of freedom
-## Multiple R-squared:  0.5518, Adjusted R-squared:  0.5514 
-## F-statistic:  1488 on 9 and 10876 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 155.8 on 10877 degrees of freedom
+## Multiple R-squared:  0.2609, Adjusted R-squared:  0.2604 
+## F-statistic:   480 on 8 and 10877 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code># AIC compare - 135377
 AIC(full.fit.step)</code></pre>
-<pre><code>## [1] 135377.6</code></pre>
+<pre><code>## [1] 140819.9</code></pre>
 <pre class="r"><code># BIC compare - 135457
 BIC(full.fit.step)</code></pre>
-<pre><code>## [1] 135457.8</code></pre>
+<pre><code>## [1] 140892.9</code></pre>
 <pre class="r"><code># try log transformation
-full.fit.step.log&lt;-lm(log(count)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+full.fit.step.log&lt;-lm(log(count)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season
                 ,data=bike_train)
 
 # R2 .4011
@@ -680,65 +679,63 @@ summary(full.fit.step.log)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = log(count) ~ humidity + windspeed + temp + atemp + 
-##     weather + workingday + holiday + season + casual, data = bike_train)
+##     weather + workingday + holiday + season, data = bike_train)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -4.7472 -0.5050  0.2375  0.7685  2.9921 
+## -5.6855 -0.6105  0.2562  0.8541  3.5924 
 ## 
 ## Coefficients:
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  3.4902554  0.0662985  52.645  &lt; 2e-16 ***
-## humidity    -0.0135479  0.0007404 -18.297  &lt; 2e-16 ***
-## windspeed    0.0080639  0.0014884   5.418 6.16e-08 ***
-## temp        -0.0137113  0.0085088  -1.611 0.107113    
-## atemp        0.0302972  0.0078299   3.869 0.000110 ***
-## weather      0.0742426  0.0195177   3.804 0.000143 ***
-## workingday   0.4370982  0.0270302  16.171  &lt; 2e-16 ***
-## holiday      0.0862900  0.0690917   1.249 0.211721    
-## season       0.1691655  0.0106341  15.908  &lt; 2e-16 ***
-## casual       0.0146805  0.0002970  49.433  &lt; 2e-16 ***
+## (Intercept)  4.1781448  0.0717319  58.247  &lt; 2e-16 ***
+## humidity    -0.0269132  0.0007628 -35.283  &lt; 2e-16 ***
+## windspeed    0.0089184  0.0016470   5.415 6.26e-08 ***
+## temp         0.0057958  0.0094057   0.616    0.538    
+## atemp        0.0512318  0.0086519   5.921 3.29e-09 ***
+## weather      0.1231819  0.0215706   5.711 1.15e-08 ***
+## workingday  -0.1086922  0.0273027  -3.981 6.91e-05 ***
+## holiday     -0.1000743  0.0763432  -1.311    0.190    
+## season       0.1990015  0.0117488  16.938  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 1.159 on 10876 degrees of freedom
-## Multiple R-squared:  0.3943, Adjusted R-squared:  0.3938 
-## F-statistic: 786.6 on 9 and 10876 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1.283 on 10877 degrees of freedom
+## Multiple R-squared:  0.2582, Adjusted R-squared:  0.2576 
+## F-statistic: 473.2 on 8 and 10877 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code># AIC compare - 34124
 AIC(full.fit.step.log)</code></pre>
-<pre><code>## [1] 34124.95</code></pre>
+<pre><code>## [1] 36329.35</code></pre>
 <pre class="r"><code># BIC compare - 34205
 BIC(full.fit.step.log)</code></pre>
-<pre><code>## [1] 34205.2</code></pre>
+<pre><code>## [1] 36402.3</code></pre>
 <pre class="r"><code># Using Lasso via SAS, the suggested model is below RMSE (Lasso): 122.6  |  RMSE LM approach: 121.3
-SAS.Lasso &lt;- lm(count ~ humidity + windspeed + atemp + weather + workingday + holiday + season + casual ,data=bike_train)
+SAS.Lasso &lt;- lm(count ~ humidity + windspeed + atemp + weather + workingday + holiday + season ,data=bike_train)
 summary(SAS.Lasso)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = count ~ humidity + windspeed + atemp + weather + 
-##     workingday + holiday + season + casual, data = bike_train)
+##     workingday + holiday + season, data = bike_train)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -369.88  -81.70  -21.06   38.14  610.06 
+## -338.23 -102.56  -32.07   66.24  675.88 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 16.06228    6.78926   2.366 0.018007 *  
-## humidity    -0.67328    0.07741  -8.698  &lt; 2e-16 ***
-## windspeed    0.57175    0.15294   3.738 0.000186 ***
-## atemp        0.44623    0.16491   2.706 0.006822 ** 
-## weather     -2.84821    2.04217  -1.395 0.163135    
-## workingday  95.63889    2.82484  33.856  &lt; 2e-16 ***
-## holiday     23.44496    7.22489   3.245 0.001178 ** 
-## season      17.39589    1.11251  15.637  &lt; 2e-16 ***
-## casual       2.60820    0.03105  84.007  &lt; 2e-16 ***
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 132.95365    8.53239  15.582  &lt; 2e-16 ***
+## humidity     -3.06715    0.09241 -33.191  &lt; 2e-16 ***
+## windspeed     0.83932    0.19633   4.275 1.93e-05 ***
+## atemp         7.30426    0.18398  39.702  &lt; 2e-16 ***
+## weather       6.04392    2.61863   2.308    0.021 *  
+## workingday   -0.94508    3.31310  -0.285    0.775    
+## holiday      -8.58042    9.26388  -0.926    0.354    
+## season       22.82974    1.42605  16.009  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 121.3 on 10877 degrees of freedom
-## Multiple R-squared:  0.5516, Adjusted R-squared:  0.5513 
-## F-statistic:  1673 on 8 and 10877 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 155.8 on 10878 degrees of freedom
+## Multiple R-squared:  0.2607, Adjusted R-squared:  0.2603 
+## F-statistic: 548.1 on 7 and 10878 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code># build the model for scoring
 model.base.formula = count ~ weather + 
                              windspeed + 
