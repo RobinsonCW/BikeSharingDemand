@@ -44,7 +44,8 @@ library(MLmetrics)
 library(ggcorrplot)
 # Lasso
 library(glmnet)
-
+# AIC commands
+library(MASS)
 
 ```
 
@@ -447,9 +448,43 @@ RMSLE(y_pred = floor(ifelse(custom.model$fitted.values < 0, 0, custom.model$fitt
 
 
 
-
-
 ### Stepwise
+
+```{r, stepwise-model,echo=FALSE}
+
+train.mod.1$datetime <- NULL
+train.mod.1$datetime <- NULL
+
+# Fit the model with all parameters
+fit1 <- lm(count ~ ., data=train.mod.1)
+# Fit the model with only 1 parameter
+fit2 <- lm(count ~ 1, data=train.mod.1)
+
+
+# stw.model <- stepAIC(fit2,direction="both",scope=list(upper=fit1,lower=fit2))
+# summary(stw.model)
+
+stw.model.formula <- count ~ hour + month + year + weather + temp + humidity + workingday + windspeed + holiday
+
+stw.model <- lm(stw.model.formula,
+               data = train.mod.1)
+
+# summary(stw.model)
+
+test$count <- predict.lm(stw.model, test.mod.1)
+test$count <- exp(test$count)
+
+# when less that 0, replace
+test <- test %>%
+  mutate(count = round(ifelse(count < 0, 0, count)))
+
+head(test)
+
+# submit <- test %>% subset(select=c(datetime, count))
+# write.csv(submit, file = "./stepwise_kaggle_submission.csv", row.names = F)
+
+```
+
 
 
 \newpage
