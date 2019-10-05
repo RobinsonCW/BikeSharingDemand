@@ -1,0 +1,270 @@
+---
+title: "Stats2Project1"
+author: "Neha Dixit"
+date: "9/23/2019"
+output: html_document
+---
+
+
+
+## Introduction
+
+The bike sharing system is a means of renting a bicycle via a network of kiosk locations throughout a city and returning it to a different place as needed.
+
+For this analysis, we are looking at the two years worth of Capital Bikeshare program data from Washington D.C.The training set includes data for first 19 days of each month and test data set comprises of 20th day to the end of month data.
+
+The objective is to predict the total count of bikes rented during each hour  covered by the test set.
+
+
+## Exploratory Data Analysis
+
+Exploratory Data Analysis is an approach to analysis the various characteristic of the data, often via visual methods.
+
+
+```{r EDA}
+# Load Libraries
+
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(corrplot) 
+library(ggthemes)
+library(caret)
+library(tidyverse)
+library(gridExtra)
+library(car)
+
+library(lubridate)
+
+
+# Load Source Training dataset
+
+FileLocation <- ("C:/Users/ndixit/Documents/SMU/Sem2/Stats2/Project/BikeSharingDemand/anaylsis/data/train.csv")
+Bike.Train <- read.csv(FileLocation)
+
+FileLocation.Test <- ("C:/Users/ndixit/Documents/SMU/Sem2/Stats2/Project/BikeSharingDemand/anaylsis/data/test.csv")
+Bike.Test<- read.csv(FileLocation.Test)
+
+#Identify NA in dataset
+
+Bike.Train.NA <- colSums(sapply(Bike.Train, is.na))
+Bike.Train.NA <- data.frame(Variables = names(Bike.Train.NA), NA.Count = Bike.Train.NA); rownames(Bike.Train.NA) <- c()
+Bike.Train.NA
+
+# Identify Character variables
+
+Bike.Train.List <- sapply(Bike.Train, class)
+Bike.Train.List
+
+#Identify unique values
+
+Bike.Train.Unique <- rapply(Bike.Train,function(x)length(unique(x)))
+Bike.Train.Unique <- data.frame(Variables = names(Bike.Train.Unique), Unique.Count = Bike.Train.Unique); rownames(Bike.Train.Unique) <- c()
+Bike.Train.Unique
+
+# Data visualizations
+# Plot numerical variables correlation
+# If the explanatory variables are highly associated with each other, regression coefficients can become unreliable and provide inconsistent interpretations.
+
+correlator  <-  function(df){
+	df %>% 	
+		keep(is.numeric) %>%
+		cor %>%
+		corrplot( addCoef.col = "white", number.digits = 2,
+			 number.cex = 0.5, method="circle",
+			 order="hclust", title="Variable Corr Heatmap",
+			 tl.srt=45, tl.cex = 0.8)
+}
+correlator(Bike.Train)
+
+
+# Numerical data exploration
+# We can ignore causal and registered user counts
+
+p1 <- ggplot(Bike.Train) + geom_histogram(aes(temp), binwidth = 5, fill = "orange",col = "black")
+p2 <- ggplot(Bike.Train) + geom_histogram(aes(atemp), binwidth = 5, fill = "orange",col = "black")
+p3 <- ggplot(Bike.Train) + geom_histogram(aes(humidity), binwidth = 2, fill = "orange",col = "black")
+p4 <- ggplot(Bike.Train) + geom_histogram(aes(windspeed), binwidth = 4, fill = "orange",col = "black")
+
+
+grid.arrange(p1, p2, p3, p4, ncol = 3, nrow = 2)
+
+p1 <- ggplot(Bike.Train,aes(x=temp, y=count)) + geom_point(col="orange") + geom_smooth(method="lm", col="blue") 
+p2 <- ggplot(Bike.Train,aes(x=atemp, y=count)) + geom_point(col="orange") + geom_smooth(method="lm", col="blue") 
+p3 <- ggplot(Bike.Train,aes(x=humidity, y=count)) + geom_point(col="orange") + geom_smooth(method="lm", col="blue") 
+p4 <- ggplot(Bike.Train,aes(x=windspeed, y=count)) + geom_point(col="orange") + geom_smooth(method="lm", col="blue") 
+p5<- ggplot(Bike.Train,aes(x=datetime, y=count)) + geom_point(col="orange") + geom_smooth(method="lm", col="blue") 
+
+grid.arrange(p1, p2, p3, p4,p5 , ncol = 2, nrow = 3)
+
+#categorial Data Exploration
+
+# Count by Season
+Bike.Train$season <- factor(Bike.Train$season)
+Bike.Train.Season <- as.data.frame(Bike.Train%>% group_by(season) %>% summarise(count= sum(count)))
+Bike.Train.Season %>% ggplot(aes(x = season, y = count) ) + xlab("season") + ylab("Counts") +geom_bar(stat="identity",  position="dodge", fill = "orange")
+
+# Count by Holiday
+
+Bike.Train$holiday <- factor(Bike.Train$holiday)
+Bike.Train.Holiday <- as.data.frame(Bike.Train%>% group_by(holiday) %>% summarise(count= sum(count)))
+Bike.Train.Holiday %>% ggplot(aes(x = holiday, y = count) ) + xlab("holiday") + ylab("Counts") +geom_bar(stat="identity",  position="dodge", fill = "orange")
+
+
+# Count by workingday
+Bike.Train$workingday <- factor(Bike.Train$workingday)
+Bike.Train.WorkingDay <- as.data.frame(Bike.Train%>% group_by(workingday) %>% summarise(count= sum(count)))
+Bike.Train.WorkingDay %>% ggplot(aes(x = workingday, y = count) ) + xlab("workingday") + ylab("Counts") +geom_bar(stat="identity",  position="dodge", fill = "orange")
+
+# Count by weather
+
+Bike.Train$weather <- factor(Bike.Train$weather)
+Bike.Train.Weather <- as.data.frame(Bike.Train%>% group_by(weather) %>% summarise(count= sum(count)))
+Bike.Train.Weather %>% ggplot(aes(x = weather, y = count) ) + xlab("weather") + ylab("Counts") +geom_bar(stat="identity",  position="dodge", fill = "orange")
+
+
+# Summary Statistics 
+summary(Bike.Train)
+# For categorical explanatory variables it can be helpful to view summary statistics by each categorical level
+t(aggregate(count~season,data=Bike.Train,summary))
+t(aggregate(count~holiday,data=Bike.Train,summary))
+t(aggregate(count~workingday,data=Bike.Train,summary))
+t(aggregate(count~weather,data=Bike.Train,summary))
+
+
+## Model selection
+
+Bike.Train.Subset <- select(Bike.Train,-c("atemp","casual","registered"))
+Bike.Test.Subset <- select(Bike.Test,-c("atemp"))
+
+# split date 
+Bike.Train.Subset <- Bike.Train.Subset %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
+
+Bike.Test.Subset <- Bike.Test.Subset %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
+
+
+# Convert Months to Ordered Factor 
+Bike.Train.Subset$month <-month(Bike.Train.Subset$datetime, label = TRUE, abbr = FALSE)
+Bike.Test.Subset$month <-month(Bike.Test.Subset$datetime, label = TRUE, abbr = FALSE)
+
+
+
+## splitting Dataset into training and test
+
+Bike.Train.Subset <- select(Bike.Train.Subset,-c("datetime"))
+
+#Removing outlier
+Bike.Train.Subset$count<- log(Bike.Train.Subset$count)
+
+outliers <- Bike.Train.Subset[   Bike.Train.Subset$count < median(Bike.Train.Subset$count) - (sd(Bike.Train.Subset$count) * 3), ]
+
+
+Bike.Train.Subset <- Bike.Train.Subset %>%
+  filter(!datetime %in% outliers$datetime)
+
+Bike.Train.Subset <- Bike.Train.Subset %>%
+  filter(datetime != '2012-01-09 18:00:00')
+
+
+set.seed(123)
+
+ s_size <- function(df,split) {
+	floor(nrow(df)*split)
+}
+sampler <- function(data, split, sn = 0){
+	if (sn != 0) set.seed(sn)	
+	train_ind <- sample(seq_len(nrow(data)), size = s_size(data, split))
+	train <- data[train_ind,]
+	test <- data[-train_ind, ]
+	list("train" = train,  "test" = test)
+
+}
+
+partitions  <- sampler(data = Bike.Train.Subset, split = 0.80, sn = 0)
+Training <- partitions$train
+Test <- partitions$test
+summary(Training)
+summary(Test)
+
+#a<- alias(lm(count~. , data= Training))
+#vif(full.model)[,3]^2
+#full.model<-lm(count~. , data= Training)
+#vif(full.model)[,3]^2
+
+
+Bike.Test.Subset$weather <- factor(Bike.Test.Subset$weather)
+Bike.Test.Subset$workingday <- factor(Bike.Test.Subset$workingday)
+Bike.Test.Subset$holiday <- factor(Bike.Test.Subset$holiday)
+Bike.Test.Subset$season <- factor(Bike.Test.Subset$season)
+
+
+
+par(mfrow=c(1,3))
+full.model<-lm(Training$count~.,  data=Training )
+vif(full.model)
+
+
+
+
+
+#Forward Selection
+library(leaps)
+reg.fwd=regsubsets(count~.,data=Training,method="forward",nvmax=10)
+
+#backward Selection
+reg.bkd=regsubsets(count~.,data=Training,method="backward",nvmax=10)
+
+#stepwise Selection
+reg.stp=regsubsets(count~.,data=Training,method="stepwise",nvmax=10)
+
+
+#LASSO 
+library(glmnet)
+x=model.matrix(count~.,Training)[,-8]
+y = Training$count
+
+xtest<-model.matrix(count~.,Test)[,-8]
+ytest<-Test$count
+
+grid=10^seq(10,-2, length =100)
+lasso.mod=glmnet(x,y,alpha=1, lambda =grid)
+
+cv.out=cv.glmnet(x,y,alpha=1) #alpha=1 performs LASSO
+plot(cv.out)
+
+bestlambda<-cv.out$lambda.min  #Optimal penalty parameter. 
+lasso.pred=predict (lasso.mod ,s=bestlambda ,newx=xtest)
+
+testMSE_LASSO<-mean((ytest-lasso.pred)^2)
+testMSE_LASSO
+
+coef(lasso.mod,s=bestlambda)
+
+#Customer selection
+custom.model.formula = count ~ weather + 
+                             windspeed + 
+                             temp + 
+                             month +
+                             hour +
+                             month:hour
+custom.model  <- lm(formula = custom.model.formula, data = Training)
+par(mfrow=c(2,2))
+plot(custom.model)
+
+head(predict(custom.model,Test,interval="predict"))
+
+
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

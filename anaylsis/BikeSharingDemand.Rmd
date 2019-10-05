@@ -437,6 +437,9 @@ plot(custom.model)
 
 ols_plot_resid_lev(custom.model)
 
+head(predict(custom.model,train.mod.1,interval="predict"))
+
+
 ```
 
 ### RMSLE: Root Mean Squared Logarithmic Error Loss
