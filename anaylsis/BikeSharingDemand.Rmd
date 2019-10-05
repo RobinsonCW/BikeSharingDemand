@@ -11,10 +11,6 @@ encoding: UTF-8
 bibliography: references.bib
 biblio-style: apalike
 output:
-  bookdown::pdf_document2:
-     citation_package: natbib
-     keep_tex: true
-     toc: false
 header-includes:
    - \usepackage{amsmath}
    - \usepackage[utf8]{inputenc}
@@ -411,6 +407,19 @@ testMSE_LASSO<-mean((ytest-lasso.pred)^2)
 testMSE_LASSO
 
 
+
+
+# Chance - New Input - results
+coef(lasso.model)[, 100]
+lasso.model.reg <- lm(count ~ season + holiday + workingday + weather + temp + humidity + windspeed + year + month + day + hour, data = train.mod.1 )
+
+summary(lasso.model.reg)
+AIC(lasso.model.reg)
+BIC(lasso.model.reg)
+RMSE <- function(error) { sqrt(mean(error^2)) }
+RMSE(lasso.model.reg$residuals)
+
+
 ```
 
 
@@ -437,16 +446,14 @@ plot(custom.model)
 
 ols_plot_resid_lev(custom.model)
 
+# Chance - New Input - results
+summary(custom.model)
+AIC(custom.model)
+BIC(custom.model)
+RMSE <- function(error) { sqrt(mean(error^2)) }
+RMSE(custom.model$residuals)
+
 ```
-
-### RMSLE: Root Mean Squared Logarithmic Error Loss
-```{r, cutom-rmsle, echo=FALSE}
-
-RMSLE(y_pred = floor(ifelse(custom.model$fitted.values < 0, 0, custom.model$fitted.values)), y_true = train.mod.1$count)
-
-```
-
-
 
 ### Stepwise
 
@@ -479,6 +486,13 @@ test <- test %>%
   mutate(count = round(ifelse(count < 0, 0, count)))
 
 head(test)
+
+# Chance - New Input - results
+summary(stw.model)
+AIC(stw.model)
+BIC(stw.model)
+RMSE <- function(error) { sqrt(mean(error^2)) }
+RMSE(stw.model$residuals)
 
 # submit <- test %>% subset(select=c(datetime, count))
 # write.csv(submit, file = "./stepwise_kaggle_submission.csv", row.names = F)
@@ -543,6 +557,13 @@ head(test)
 
 ## Comparing Competing Models
 
+We prepared three competing models across the bike sharing training data set using the following approaches: 1) stepwise, 2) LASSO, and 3) a custom approach. The results from all three modeling exercises are very similar, and no one model is a key front runner. That said, the Stepwise model does perform slightly better using the evaluation measures: AIC, BIC, RMSE, and Adjusted R2. For detailed results, please reference the table below:
+
+Model          |  RMSE  |  Adjusted R2  |  AIC  |  BIC  |
+---------------|--------|---------------|-------|-------|
+1. Custom      |  0.642 |  0.8225       | 19676 | 20135 |
+2. LASSO       |  0.599 |  0.7915       | 21642 | 23784 |
+3. Stepwise    |  0.599 |  0.8224       | 19668 | 19996 |
 
 ## Conclusion
 
