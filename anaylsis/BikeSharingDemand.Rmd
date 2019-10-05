@@ -31,6 +31,7 @@ editor_options:
 
 ```{r, lib-read, results='hide', message=FALSE, include=FALSE, echo=FALSE}
 setwd('.')
+#setwd('C:/Users/ndixit/Documents/SMU/Sem2/Stats2/Project/BikeSharingDemand/anaylsis')
 
 # library imports
 library(tidyverse)
@@ -433,12 +434,16 @@ custom.model  <- lm(formula = custom.model.formula, data = train.mod.1)
 par(mfrow=c(2,2))
 plot(custom.model)
 
-# summary(custom.model)
+summary(custom.model)
 
 ols_plot_resid_lev(custom.model)
 
-# prediction interval
-head(predict(custom.model,train.mod.1,interval="predict"))
+# extract the model estimates from the model summary
+sm <- summary(custom.model)
+sm.coe <- sm$coefficients
+
+# get the CIs for the coefficients
+model.conf <- confint(custom.model)
 
 
 ```
@@ -489,9 +494,14 @@ head(test)
 # submit <- test %>% subset(select=c(datetime, count))
 # write.csv(submit, file = "./stepwise_kaggle_submission.csv", row.names = F)
 
-# prediction intervals
 
-head(predict(stw.model,train.mod.1,interval="predict"))
+# extract the model estimates from the model summary
+sm <- summary(stw.model)
+sm.coe <- sm$coefficients
+
+# get the CIs for the coefficients
+model.conf <- confint(stw.model)
+
 ```
 
 
