@@ -409,7 +409,7 @@ testMSE_LASSO
 
 
 
-# Chance - New Input - results
+# Addme - New Input - results
 coef(lasso.model)[, 100]
 lasso.model.reg <- lm(count ~ season + holiday + workingday + weather + temp + humidity + windspeed + year + month + day + hour, data = train.mod.1 )
 
@@ -446,7 +446,7 @@ plot(custom.model)
 
 ols_plot_resid_lev(custom.model)
 
-# Chance - New Input - results
+# Addme - New Input - results
 summary(custom.model)
 AIC(custom.model)
 BIC(custom.model)
@@ -487,7 +487,7 @@ test <- test %>%
 
 head(test)
 
-# Chance - New Input - results
+# Addme - New Input - results
 summary(stw.model)
 AIC(stw.model)
 BIC(stw.model)
@@ -555,7 +555,6 @@ RMSE(stw.model$residuals)
 [Model Assumption Assessment]
 
 
-## Comparing Competing Models
 
 We prepared three competing models across the bike sharing training data set using the following approaches: 1) stepwise, 2) LASSO, and 3) a custom approach. The results from all three modeling exercises are very similar, and no one model is a key front runner. That said, the Stepwise model does perform slightly better using the evaluation measures: AIC, BIC, RMSE, and Adjusted R2. For detailed results, please reference the table below:
 
