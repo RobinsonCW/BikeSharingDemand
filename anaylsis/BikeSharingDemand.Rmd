@@ -437,6 +437,7 @@ plot(custom.model)
 
 ols_plot_resid_lev(custom.model)
 
+# prediction interval
 head(predict(custom.model,train.mod.1,interval="predict"))
 
 
@@ -483,9 +484,14 @@ test <- test %>%
 
 head(test)
 
+
+
 # submit <- test %>% subset(select=c(datetime, count))
 # write.csv(submit, file = "./stepwise_kaggle_submission.csv", row.names = F)
 
+# prediction intervals
+
+head(predict(stw.model,train.mod.1,interval="predict"))
 ```
 
 
