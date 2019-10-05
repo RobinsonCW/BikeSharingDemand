@@ -642,7 +642,7 @@ lasso.pred=predict(lasso.model ,s=best.lambda ,newx=xtest)
 testMSE_LASSO&lt;-mean((ytest-lasso.pred)^2)
 testMSE_LASSO</code></pre>
 <pre><code>## [1] 0.3688791</code></pre>
-<pre class="r"><code># Chance - New Input - results
+<pre class="r"><code># Addme - New Input - results
 coef(lasso.model)[, 100]</code></pre>
 <pre><code>##    (Intercept)    (Intercept)   seasonSummer     seasonFall   seasonWinter 
 ##    3.798048546    0.000000000    0.083966436    0.000000000    0.000000000 
@@ -1201,10 +1201,7 @@ RMSE(lasso.model.reg$residuals)</code></pre>
 <div id="model-assumption-assessment" class="section level2">
 <h2>Model Assumption Assessment</h2>
 <p><a href="#model-assumption-assessment">Model Assumption Assessment</a></p>
-</div>
-<div id="comparing-competing-models-1" class="section level2">
-<h2>Comparing Competing Models</h2>
-<p>We prepared three competing models across the bike sharing training data set using the following approaches: 1) stepwise, 2) LASSO, and 3) a custom approach. The results from all three modeling exercises are very similar, and no one model is a key front runner. That said, the [] model does perform slightly better using the evaluation measures: AIC, BIC, RMSE, and Adjusted R2. For detailed results, please reference the table below:</p>
+<p>We prepared three competing models across the bike sharing training data set using the following approaches: 1) stepwise, 2) LASSO, and 3) a custom approach. The results from all three modeling exercises are very similar, and no one model is a key front runner. That said, the Stepwise model does perform slightly better using the evaluation measures: AIC, BIC, RMSE, and Adjusted R2. For detailed results, please reference the table below:</p>
 <table>
 <thead>
 <tr class="header">
@@ -1218,14 +1215,14 @@ RMSE(lasso.model.reg$residuals)</code></pre>
 <tbody>
 <tr class="odd">
 <td>1. Custom</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>0.642</td>
+<td>0.8225</td>
+<td>19676</td>
+<td>20135</td>
 </tr>
 <tr class="even">
 <td>2. LASSO</td>
-<td>0.642</td>
+<td>0.599</td>
 <td>0.7915</td>
 <td>21642</td>
 <td>23784</td>
