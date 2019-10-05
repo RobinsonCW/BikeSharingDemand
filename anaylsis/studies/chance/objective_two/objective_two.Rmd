@@ -91,8 +91,7 @@ table(train$workingday)
 train$weather <- factor(train$weather, labels = c("Great", "Good", "Average", "Poor"))
 test$weather <- factor(test$weather, labels = c("Great", "Good", "Average", "Poor"))
 
-
-# table(train$weather)
+table(train$weather)
 
 
 ```
@@ -110,13 +109,13 @@ test$weather <- factor(test$weather, labels = c("Great", "Good", "Average", "Poo
 train <- train %>%
   mutate(year = as.factor(format(datetime, format = "%Y")), 
          month = as.numeric(format(datetime, format = "%m")), 
-         day = as.numeric(format(datetime, format = "%d")),
+         day = as.factor(format(datetime, format = "%d")),
          hour = as.factor(format(datetime, format = "%H")))
 
 test <- test %>%
   mutate(year = as.factor(format(datetime, format = "%Y")), 
          month = as.numeric(format(datetime, format = "%m")), 
-         day = as.numeric(format(datetime, format = "%d")),
+         day = as.factor(format(datetime, format = "%d")),
          hour = as.factor(format(datetime, format = "%H")))
 
 
@@ -130,9 +129,6 @@ test <- test %>%
 train$month <-month(train$datetime, label = TRUE, abbr = FALSE)
 test$month <-month(test$datetime, label = TRUE, abbr = FALSE)
 
-# need to convert the datetime column to a string for rbind function
-train$datetime <-as.character(train$datetime)
-test$datetime <-as.character(test$datetime)
 
 ```
 
@@ -156,6 +152,54 @@ test$datetime <-as.character(test$datetime)
 ### January
 
 
+#### Auto Arima
+
+
+```{r}
+
+train1arm <- train %>%
+  filter(year == '2011' & month == 'January') %>%
+  select(datetime, count)
+
+test1arm <- test %>%
+  filter(year == '2011' & month == 'January') %>%
+  mutate(count = NA) %>%
+  select(datetime, count)
+
+
+### Log the response variable
+train1arm$count = log(train1arm$count)
+
+# head(train25)
+# head(test25)
+
+autoarm <- auto.arima(train1arm$count, D=1)
+
+# ?auto.arima
+
+number = nrow(test1arm)
+
+acf(autoarm$residuals)
+pacf(autoarm$residuals)
+
+checkresiduals(autoarm)
+
+fcst <- forecast(autoarm, h=number)
+
+autoplot(fcst)
+
+# point estimate (mean)
+test1arm$count <- fcst$mean
+
+RMSLE(y_pred = fcst$fitted, y_true = train1arm$count)
+
+summary(autoarm)
+
+
+```
+
+#### AR 25
+
 ```{r}
 
 train1 <- train %>%
@@ -167,28 +211,32 @@ test1 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train1$count = log(train1$count)
+
 # head(train1)
 # head(test1)
 
-AR24 <- arima(train1$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train1$count,order=c(25,0,0))
 
 number = nrow(test1)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test1$count <- round(fcst$mean)
-# test1
+test1$count <- fcst$mean
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train1$count)
+
+RMSLE(y_pred = fcst$fitted, y_true = train1$count)
+summary(AR25)
 
 ```
 
@@ -206,28 +254,30 @@ test2 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+### Log the response variable
+train2$count = log(train2$count)
+
 # head(train2)
 # head(test2)
 
-AR24 <- arima(train2$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train2$count,order=c(25,0,0))
 
 number = nrow(test2)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test2$count <- round(fcst$mean)
+test2$count <- fcst$mean
 
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train2$count)
+RMSLE(y_pred = fcst$fitted, y_true = train2$count)
 
 
 ```
@@ -247,29 +297,30 @@ test3 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+### Log the response variable
+train3$count = log(train3$count)
+
 # head(train3)
 # head(test3)
 
-AR24 <- arima(train3$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train3$count,order=c(25,0,0))
 
 number = nrow(test3)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test3$count <- round(fcst$mean)
+test3$count <- fcst$mean
 
-# test3
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train3$count)
+RMSLE(y_pred = fcst$fitted, y_true = train3$count)
 
 ```
 
@@ -288,28 +339,30 @@ test4 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+### Log the response variable
+train4$count = log(train4$count)
+
 # head(train4)
 # head(test4)
 
-AR24 <- arima(train4$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train4$count,order=c(25,0,0))
 
 number = nrow(test4)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test4$count <- round(fcst$mean)
+test4$count <- fcst$mean
 
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train4$count)
+RMSLE(y_pred = fcst$fitted, y_true = train4$count)
 
 
 ```
@@ -329,29 +382,30 @@ test5 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+### Log the response variable
+train5$count = log(train5$count)
+
 # head(train5)
 # head(test5)
 
-AR24 <- arima(train5$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train5$count,order=c(25,0,0))
+# tsdisplay(residuals(AR25),lag.max=25,main="AR(24) Resid. Diagnostics")
 
 number = nrow(test5)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test5$count <- round(fcst$mean)
+test5$count <- fcst$mean
 
-# test5
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train5$count)
+RMSLE(y_pred = fcst$fitted, y_true = train5$count)
 
 ```
 
@@ -369,29 +423,30 @@ test6 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+### Log the response variable
+train6$count = log(train6$count)
+
 # head(train6)
 # head(test6)
 
-AR24 <- arima(train6$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train6$count,order=c(25,0,0))
+# tsdisplay(residuals(AR25),lag.max=25,main="AR(24) Resid. Diagnostics")
 
 number = nrow(test6)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test6$count <- round(fcst$mean)
+test6$count <- fcst$mean
 
-# test6
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train6$count)
+RMSLE(y_pred = fcst$fitted, y_true = train6$count)
 
 ```
 
@@ -409,29 +464,31 @@ test7 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train7$count = log(train7$count)
+
 # head(train7)
 # head(test7)
 
-AR24 <- arima(train7$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train7$count,order=c(25,0,0))
 
 number = nrow(test7)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test7$count <- round(fcst$mean)
+test7$count <- fcst$mean
 
-# test7
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train7$count)
+RMSLE(y_pred = fcst$fitted, y_true = train7$count)
 
 ```
 
@@ -449,29 +506,31 @@ test8 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+
+### Log the response variable
+train8$count = log(train8$count)
+
 # head(train8)
 # head(test8)
 
-AR24 <- arima(train8$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train8$count,order=c(25,0,0))
 
 number = nrow(test8)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test8$count <- round(fcst$mean)
+test8$count <- fcst$mean
 
-# test8
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train8$count)
+RMSLE(y_pred = fcst$fitted, y_true = train8$count)
 
 ```
 
@@ -489,29 +548,32 @@ test9 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+
+### Log the response variable
+train9$count = log(train9$count)
+
 # head(train9)
 # head(test9)
 
-AR24 <- arima(train9$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train9$count,order=c(25,0,0))
 
 number = nrow(test9)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test9$count <- round(fcst$mean)
+test9$count <- fcst$mean
 
-# test9
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train9$count)
+RMSLE(y_pred = fcst$fitted, y_true = train9$count)
 
 ```
 
@@ -529,29 +591,31 @@ test10 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train10$count = log(train10$count)
+
 # head(train10)
 # head(test10)
 
-AR24 <- arima(train10$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train10$count,order=c(25,0,0))
 
 number = nrow(test10)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test10$count <- round(fcst$mean)
+test10$count <- fcst$mean
 
-# test10
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train10$count)
+RMSLE(y_pred = fcst$fitted, y_true = train10$count)
 
 ```
 
@@ -570,30 +634,31 @@ test11 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train11$count = log(train11$count)
+
 # head(train11)
 # head(test11)
 
-AR24 <- arima(train11$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train11$count,order=c(25,0,0))
 
 number = nrow(test11)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test11$count <- round(fcst$mean)
+test11$count <- fcst$mean
 
-# test11
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train11$count)
-
+RMSLE(y_pred = fcst$fitted, y_true = train11$count)
 ```
 
 
@@ -610,29 +675,30 @@ test12 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train12$count = log(train12$count)
+
 # head(train12)
 # head(test12)
 
-AR24 <- arima(train12$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train12$count,order=c(25,0,0))
 
 number = nrow(test12)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test12$count <- round(fcst$mean)
+test12$count <- fcst$mean
 
-# test12
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train12$count)
+RMSLE(y_pred = fcst$fitted, y_true = train12$count)
 
 ```
 
@@ -653,28 +719,31 @@ test13 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train13$count = log(train13$count)
+
 # head(train13)
 # head(test13)
 
-AR24 <- arima(train13$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train13$count,order=c(25,0,0))
 
 number = nrow(test13)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test13$count <- round(fcst$mean)
-# test13
+test13$count <- fcst$mean
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train13$count)
+
+RMSLE(y_pred = fcst$fitted, y_true = train13$count)
 
 ```
 
@@ -692,28 +761,31 @@ test14 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train14$count = log(train14$count)
+
 # head(train14)
 # head(test14)
 
-AR24 <- arima(train14$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train14$count,order=c(25,0,0))
 
 number = nrow(test14)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test14$count <- round(fcst$mean)
+test14$count <- fcst$mean
 
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train14$count)
+RMSLE(y_pred = fcst$fitted, y_true = train14$count)
 
 
 ```
@@ -733,30 +805,31 @@ test15 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train15$count = log(train15$count)
+
 # head(train15)
 # head(test15)
 
-AR24 <- arima(train15$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train15$count,order=c(25,0,0))
 
 number = nrow(test15)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test15$count <- round(fcst$mean)
-
-# test15
+test15$count <- fcst$mean
 
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train15$count)
+RMSLE(y_pred = fcst$fitted, y_true = train15$count)
 
 
 ```
@@ -776,29 +849,30 @@ test16 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train16$count = log(train16$count)
+
 # head(train16)
 # head(test16)
 
-AR24 <- arima(train16$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train16$count,order=c(25,0,0))
 
 number = nrow(test16)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test16$count <- round(fcst$mean)
+test16$count <- fcst$mean
 
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train16$count)
-
+RMSLE(y_pred = fcst$fitted, y_true = train16$count)
 
 ```
 
@@ -817,29 +891,31 @@ test17 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train17$count = log(train17$count)
+
 # head(train17)
 # head(test17)
 
-AR24 <- arima(train17$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train17$count,order=c(25,0,0))
 
 number = nrow(test17)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test17$count <- round(fcst$mean)
+test17$count <- fcst$mean
 
-# test5
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train17$count)
+RMSLE(y_pred = fcst$fitted, y_true = train17$count)
 
 ```
 
@@ -857,29 +933,31 @@ test18 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train18$count = log(train18$count)
+
 # head(train18)
 # head(test18)
 
-AR24 <- arima(train18$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train18$count,order=c(25,0,0))
 
 number = nrow(test18)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test18$count <- round(fcst$mean)
+test18$count <- fcst$mean
 
-# test18
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train18$count)
+RMSLE(y_pred = fcst$fitted, y_true = train18$count)
 
 ```
 
@@ -897,29 +975,30 @@ test19 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train19$count = log(train19$count)
+
 # head(train19)
 # head(test19)
 
-AR24 <- arima(train19$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train19$count,order=c(25,0,0))
 
 number = nrow(test19)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test19$count <- round(fcst$mean)
+test19$count <- fcst$mean
 
-# test19
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train19$count)
+RMSLE(y_pred = fcst$fitted, y_true = train19$count)
 
 ```
 
@@ -937,29 +1016,31 @@ test20 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train20$count = log(train20$count)
+
 # head(train20)
 # head(test20)
 
-AR24 <- arima(train20$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train20$count,order=c(25,0,0))
 
 number = nrow(test20)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test20$count <- round(fcst$mean)
+test20$count <- fcst$mean
 
-# test20
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train20$count)
+RMSLE(y_pred = fcst$fitted, y_true = train20$count)
 
 ```
 
@@ -977,29 +1058,31 @@ test21 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train21$count = log(train21$count)
+
 # head(train21)
 # head(test21)
 
-AR24 <- arima(train21$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train21$count,order=c(25,0,0))
 
 number = nrow(test21)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test21$count <- round(fcst$mean)
+test21$count <- fcst$mean
 
-# test21
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train21$count)
+RMSLE(y_pred = fcst$fitted, y_true = train21$count)
 
 ```
 
@@ -1017,29 +1100,30 @@ test22 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train22$count = log(train22$count)
+
 # head(train22)
 # head(test22)
 
-AR24 <- arima(train22$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train22$count,order=c(25,0,0))
 
 number = nrow(test22)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test22$count <- round(fcst$mean)
+test22$count <- fcst$mean
 
-# test22
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train22$count)
+RMSLE(y_pred = fcst$fitted, y_true = train22$count)
 
 ```
 
@@ -1058,29 +1142,31 @@ test23 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train23$count = log(train23$count)
+
 # head(train23)
 # head(test23)
 
-AR24 <- arima(train23$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train23$count,order=c(25,0,0))
+# tsdisplay(residuals(AR25),lag.max=25,main="AR(24) Resid. Diagnostics")
 
 number = nrow(test23)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test23$count <- round(fcst$mean)
+test23$count <- fcst$mean
 
-# test23
-
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train23$count)
+RMSLE(y_pred = fcst$fitted, y_true = train23$count)
 
 ```
 
@@ -1098,29 +1184,33 @@ test24 <- test %>%
   mutate(count = NA) %>%
   select(datetime, count)
 
+
+### Log the response variable
+train24$count = log(train24$count)
+
 # head(train24)
 # head(test24)
 
-AR24 <- arima(train24$count,order=c(25,0,0))
-# tsdisplay(residuals(AR24),lag.max=25,main="AR(24) Resid. Diagnostics")
+AR25 <- arima(train24$count,order=c(25,0,0))
 
 number = nrow(test24)
 
-acf(AR24$residuals)
-pacf(AR24$residuals)
+acf(AR25$residuals)
+pacf(AR25$residuals)
 
-checkresiduals(AR24)
+checkresiduals(AR25)
 
-fcst <- forecast(AR24, h=number)
+fcst <- forecast(AR25, h=number)
 
 autoplot(fcst)
 
 # point estimate (mean)
-test24$count <- round(fcst$mean)
+test24$count <- fcst$mean
 
-# test24
 
-RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train24$count)
+RMSLE(y_pred = fcst$fitted, y_true = train24$count)
+
+summary(AR25)
 
 ```
 
@@ -1139,10 +1229,13 @@ combined <- data.frame(datetime=character(),
 combined <- bind_rows(test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11, test12,
                       test13, test14, test15, test16, test17, test18, test19, test20, test21, test22, test23, test24)
 
-combined <- combined %>%
-  mutate(count = floor(ifelse(count < 0, 0, count)))
 
-# write.csv(combined, file = "~/Desktop/ts_kaggle_submission.csv", row.names = F)
+combined <- combined %>%
+  mutate(count = round(exp(count)))
+
+
+# combined
+# write.csv(combined, file = "C:\\Users\\Chance\\Desktop\\ts_kaggle_submission.csv", row.names = F)
 
 ```
 
@@ -1159,15 +1252,13 @@ combined <- combined %>%
 
 ```{r}
 
-# Kaggle Score:  RMSLE = 1.33332
-score = (1 - (3008 / 3251)) * 100
+# Kaggle Score:  RMSLE = 1.01847
+score = (1 - (2776 / 3246)) * 100
 
-# We only beat ~7% of all submissions
+# We only beat ~14% of all submissions
 score
 
 ```
-
-
 
 
 
