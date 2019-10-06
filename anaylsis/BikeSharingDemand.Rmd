@@ -49,6 +49,8 @@ library(MASS)
 # Time Series Analysis
 library(tseries)
 library(forecast)
+# Kable tables
+library(kableExtra)
 ```
 
 
@@ -204,6 +206,8 @@ train.mod.1 %>%
 
 ```
 
+
+\newpage
 
 
 ```{r, split-date, results='hide', message=FALSE, include=FALSE, echo=FALSE}
@@ -660,6 +664,7 @@ test.mod.2$month <-month(test.mod.2$datetime, label = TRUE, abbr = FALSE)
 
 ```
 
+
 ```{r auto-arima, results='hide', message=FALSE, include=FALSE, echo=FALSE}
 
 train1arm <- train.mod.2 %>%
@@ -688,9 +693,16 @@ fcst <- forecast(autoarm, h=number)
 # point estimate (mean)
 test1arm$count <- fcst$mean
 
-RMSLE(y_pred = fcst$fitted, y_true = train1arm$count)
+AUTOARM.RMSLE <- RMSLE(y_pred = fcst$fitted, y_true = train1arm$count)
 
-summary(autoarm)
+# Training set error measures:
+AUTOARM.SM <- summary(autoarm)
+
+# sigma^2 estimated as
+AUTOARM.SIGMA2 <- autoarm$sigma2
+
+# aic 
+AUTOARM.AIC <- autoarm$aic
 
 ```
 
@@ -742,10 +754,21 @@ fcst <- forecast(AR25, h=number)
 test1$count <- fcst$mean
 
 
-RMSLE(y_pred = fcst$fitted, y_true = train1$count)
-summary(AR25)
+AR25.RMSLE <- RMSLE(y_pred = fcst$fitted, y_true = train1$count)
+
+# Training set error measures:
+AR25.SM <- summary(AR25)
+
+# sigma^2 estimated as
+AR25.SIGMA2 <- AR25$sigma2
+
+# aic 
+AR25.AIC <- AR25$aic
+
 
 ```
+
+
 
 ```{r, arima-25-plot-1, echo=F, warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Arima (25) Residual Plots', out.width = '45%', fig.pos="htbp", fig.show='hold'}
 
@@ -759,6 +782,30 @@ checkresiduals(AR25)
 autoplot(fcst)
 
 ```
+
+
+\newpage
+
+
+### Accuracy Metrics
+
+
+The accuracy metrics appear to go in favor of the AR25 model.
+
+
+```{r, arima-accuracy-metrics, echo=FALSE}
+
+# print accuracy metrics to md table
+kable(data.frame('Model' = c('ARIMA', 'AR25'),
+                 'RMSLE'=c(AUTOARM.RMSLE, AR25.RMSLE),
+                 'AIC'=c(AUTOARM.AIC, AR25.AIC),
+                 'Variance'=c(AUTOARM.SIGMA2, AR25.SIGMA2)),
+      "latex", booktabs = T)  %>%
+  kable_styling(position = "center")
+
+```
+
+
 
 \newpage
 

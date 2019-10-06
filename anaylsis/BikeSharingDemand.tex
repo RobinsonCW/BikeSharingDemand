@@ -133,6 +133,21 @@
   \postdate{\par}
     \date{Master of Science in Data Science, Southern Methodist University, USA}
 
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
 \usepackage{amsmath}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -229,6 +244,8 @@ Season & Label & Description\tabularnewline
 \paragraph{Weather}\label{weather}}
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf}
+
+\newpage
 
 \hypertarget{count-by-month}{%
 \paragraph{Count by Month}\label{count-by-month}}
@@ -563,6 +580,25 @@ As the data had been pre-split monthly, we needed to make our predictions from t
 
 \caption{Arima (25) Forecasts}\label{fig:arima-25-plot-2}
 \end{figure}
+
+\newpage
+
+\hypertarget{accuracy-metrics}{%
+\subsubsection{Accuracy Metrics}\label{accuracy-metrics}}
+
+The accuracy metrics appear to go in favor of the AR25 model.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Model & RMSLE & AIC & Variance\\
+\midrule
+ARIMA & 0.2418941 & 791.5698 & 0.3541476\\
+AR25 & 0.2265693 & 768.3810 & 0.3025818\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \newpage
 

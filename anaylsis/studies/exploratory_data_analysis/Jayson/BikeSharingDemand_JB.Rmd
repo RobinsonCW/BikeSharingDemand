@@ -1,0 +1,205 @@
+---
+title: "Regression Analysis of the Bike Sharing Demand"
+author: "Chance Robinson, Jayson Barker and Neha Dixit"
+date: |
+  Master of Science in Data Science, Southern Methodist University, USA
+---
+
+```{r, lib-read, results='hide', message=FALSE, include=FALSE, echo=FALSE}
+setwd('.')
+
+# library imports
+library(tidyverse)
+library(car)
+library(ggplot2)
+library(sqldf)
+library(leaps)
+library(corrplot)
+library(MASS)
+library(dplyr)
+
+
+# seed data
+set.seed(12345)
+
+
+```
+
+
+# Introduction
+
+Using a publically available data set on 2 years of bike sharing data (2011-2012), we attempted answer the question, "what is the demand for bike sharing across the last half of each month in 2011 and 2012?". Therefore in this document, we aim to create a model to predict bike sharing demand based on a handful of predictors for that timeframe. 
+
+# Data Description
+
+The dataset we chose for this project was a publicly shared, hourly bike sharing dataset made available through Kaggle in csv format. 
+
+This data set is divided into two distinct sets – a train and test set. The train set consists of 6,493 rows (titled "train.csv") and the test set consists of 10,886 rows (titled "test.csv"). Within the training set, the first 19 days of each month are captured whereas in the test data set, the 20th day to the end of each month is present. The entirity of the data spans from 1/1/2011 through 12/31/2012 - encompassing two full years of bike sharing data. Interstingly, the time component of this analysis is captured in hours of each day meaning we have a calendar date represented 24 times (for each hour of that day) in the data, along with it's associated attribute values.
+
+In both sets, there are a total of 12 attributes which capture multiple variables related to bike rentals. Some of these attributes are categorical, and others are continuous. All attributes are summarized in the table below:
+
+Attribute Name | Description
+-------------- | -----------
+datetime       | Hourly date + timestamp
+season         | Categorical factor with three levels: 1 = spring, 2 = summer, 3 = fall, 4 = winter
+holiday        | Binary values indicating if the date is considered a holiday 
+workingday     | Whether the day is neither a weekend nor holiday
+weather        | Categorical factor with 4 levels: 1: Clear, Few clouds, Partly cloudy, Partly cloudy  2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds  4: Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog 
+Temp           | Temperature in Celsius
+Atemp          | “feels like” temperature in Celsius
+humidity       | Relative humidity
+windspeed      | Wind speed
+casual         | Number of non-registered user rentals initiated
+registered     | Number of registered user rentals initiated
+count          | Number of total rentals
+
+After performing our exploratory data analysis step, we recognized that attributes registered and count were highly correlated which logically makes sense; an individual is very likely to actually rent a unit if the register to rent that unit. Therefore we chose to exclude registered from the analysis both from a statistical perspective (as you will see later in the analysis sections) and also from a practical perspective.
+
+
+# Objective I Analysis
+
+
+## Question of Interest
+
+
+[Question of Interest]
+
+
+## Model Selection
+
+# Lasso using SAS
+Lasso mode via SAS: SAS.Lasso <- lm(count ~ humidity + windspeed + atemp + weather + workingday + holiday + season + casual, data=bike_train)
+
+![Screen capture from SAS after performing a LASSO analysis on the data set to identify potential predictors](https://i.ibb.co/Pz07T7J/SAS-Lasso.png)
+
+# stepwise
+full.fit.step<-stepAIC(full.fit, direction="both")
+summary(full.fit.step)
+
+full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual 
+                ,data=bike_train)
+
+![Screen capture from R using a Stepwise variable selection method](https://i.ibb.co/Gdfh48z/R-Stepwise.png)
+
+\newpage
+
+
+## Model Assumptions Assessment
+
+* One
+* Two
+* Three 
+
+Constant-variance is a concern that did not appear to be rectified wholly by log transformation. [ we need to insert residual plots here]
+Linearity seems to deviate a bit and may also be a concern, but did not appear afected by a log-linear, log-log, or even linear-log transformation
+Normal distribution tended to improve with a log transformation
+
+## Comparing Competing Models
+
+
+When comparing the LASSO approach with the Stepwise approach, we can see that the variables selected are slightly different between the two approaches; in SAS, our LASSO approach selected humidity, windspeed, atemp, weather, workingday, holiday, season, and casual. In R, our Stepwise approach selected all of those variables with the addition of temp. Note: since casual is not in our test set, we will be dropping it from the modelling process.
+
+## Set WD and file locations
+```{r sect10}
+
+# setting working directory
+setwd("F:/SMU/DS6372/Project 1/bike-sharing-demand")
+bike_test<-read.csv("test.csv")
+bike_train<-read.csv("train.csv")
+
+```
+
+## Stepwise model recommendation - R
+```{r sect13}
+
+full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season
+                ,data=bike_train)
+
+# R2 .2604
+summary(full.fit.step)
+
+# AIC compare - 140819
+AIC(full.fit.step)
+
+# BIC compare - 140892.9
+BIC(full.fit.step)
+
+```
+
+## Try stepwise model recommendation from SAS
+```{r sect14}
+
+# Using Lasso via SAS, the suggested model is below RMSE (Lasso): 122.6  |  RMSE LM approach: 121.3
+SAS.Lasso <- lm(count ~ humidity + windspeed + atemp + weather + workingday + holiday + season,
+                data=bike_train)
+
+# R2 .2603
+summary(SAS.Lasso)
+
+# AIC compare - 140820.5
+AIC(SAS.Lasso)
+
+# BIC compare - 140886.2
+BIC(SAS.Lasso)
+
+```
+
+## Discussion
+The adjusted R2 of our LASSO model was 0.2603 and the Stepwise adjusted R2 was 0.2604. Even though the LASSO model outperforms the Stepwise model's adjusted R2 value, we sought to use more techniques for comparison. We then compared the AIC scores of the LASSO model (140820) to the Stepwise model (140819) which indicates that they are approximately equal in terms of AIC. We then chose to compare the RMSE values between the LASSO (155.8) to the Stepwise (155.8) model which indicated that again, both models are relatively equivalent. Using practical judgement, atemp seeks to explain the temperature as to what it feels like, whereas temp is the actual temp in Celsius. Because bike riding is an outdoor activity, what one feels the temperature is is more a more practical attribute to use, we feel, when attempting to determine if either weather or what the weather feels like will dictate bike rentals. Moreover, these attributes are highly correlated, as described in our exploratory data analysis step. Therefore, we feel the model with atemp (LASSO) is a better indicator of bike rental demand than the Stepwise model.
+
+## Parameters
+
+[Parameters]
+
+## Model Interpretation
+
+[Model Interpretation]
+
+
+## Conclusion
+
+[Conclusion]
+
+\newpage
+
+# Objective II Analysis
+
+
+## Question of Interest
+
+
+[Discuss time series method]
+
+
+**Time-Series Analysis**
+
+
+[Details goe here]
+
+
+## Model Assumption Assessment
+
+
+[Model Assumption Assessment]
+
+
+## Comparing Competing Models
+
+
+## Conclusion
+
+
+[Conclusion]
+
+
+\newpage
+
+# Appendix
+
+## Explorator Data Analysis
+
+## Code
+
+\newpage
+
+# References
