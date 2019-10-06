@@ -38,39 +38,7 @@ test <- read_csv('../../../data/test.csv')
 
 ```
 
-### Data Dictionary
 
-  Column Name      | 	Type                Description
-  -----------------|    ----------------- | ------------------------------------------------
-  1.  datetime     |    Date			        | YYYY-MM-DD HH24 (example:  2011-01-01 04:00:00)
-  2.  season       |    Integer 		      |	(1-4)
-  3.  holiday      |    Integer 		      |	(0 or 1)
-  4.  workingday   |    Integer 		      |	(0 or 1)
-  5.  weather      |    Integer 		      |	(1-4)
-  6.  temp         |    Float 			      |	temparture in Celcius
-  7.  atemp        |    Float 			      |	"feels like" temperature in Celsius
-  8.  humidity     |    Integer           | relative humidity
-  9.  windspeed    |    Float             | wind speed
-  10. casual       |    Integer 		      |	count of casual users 
-  11. registered   |    Integer 		      |	count of registered users 
-  12. count        |    Integer 		      |	count of total users `response variable`
-  
-  
-### Factors
-
-  * season
-    + 1 = Dec 21 ~ March 20 (Spring)
-    + 2 = March 21 ~ Jun 20 (Summer)
-    + 3 = June 21 ~ Sept 20 (Fall)
-    + 4 = Sept 21 ~ Dec 20  (Winter)
-
-  * holiday
-    + 0 = No
-    + 1 = Yes
-    
-  * workingday
-    + 0 = No
-    + 1 = Yes
     
 ```{r factors}
 train$season <- factor(train$season, labels = c("Spring", "Summer", "Fall", "Winter"))
@@ -1236,14 +1204,6 @@ combined <- combined %>%
 
 # combined
 # write.csv(combined, file = "C:\\Users\\Chance\\Desktop\\ts_kaggle_submission.csv", row.names = F)
-
-```
-
-
-### RMSLE: Root Mean Squared Logarithmic Error Loss
-```{r}
-
-# RMSLE(y_pred = floor(ifelse(fcst$fitted < 0, 0, round(fcst$fitted))), y_true = train2$count)
 
 ```
 

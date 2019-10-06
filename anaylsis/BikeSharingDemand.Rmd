@@ -46,7 +46,9 @@ library(ggcorrplot)
 library(glmnet)
 # AIC commands
 library(MASS)
-
+# Time Series Analysis
+library(tseries)
+library(forecast)
 ```
 
 
@@ -88,17 +90,18 @@ In train data set, there are a total of 12 attributes which capture multiple var
   9.  windspeed    |    Float             |wind speed
   10. casual       |    Integer 		      |count of casual users 
   11. registered   |    Integer 		      |count of registered users 
-  12. count        |    Integer 		      |count of total users `response variable`
+  12. count        |    Integer 		      |count of total users (*response variable*)
   
 
-** The test data set lacks the casual, registered and count variables.
+*Note that the test data set lacks the casual, registered and count variables.*
 
 
 \newpage
 
 # Exploratory Data Analysis
 
-* Plotting Explanatory vs. Response Variables
+
+## Plotting against Response Variable
 
 
 ```{r, categorical-factors, results='hide', message=FALSE, include=FALSE, echo=FALSE}
@@ -132,11 +135,11 @@ table(train.mod.1$weather)
 
 
 
-## Categorical Variables
+### Categorical Variables
 
 Several numeric variables were found to be better suited to categorization and were converted to factors.
 
-### Season
+#### Season
 
 Season           |Label                 |Description
 -----------------|--------------------- |------------------------------------------------
@@ -145,7 +148,9 @@ Season           |Label                 |Description
 3                | Fall                 | Jun 21 ~ Sep 20
 4                | Winter               | Sep 21 ~ Dec 20
 
-```{r, train.mod.1.season, echo=FALSE}
+```{r, train.mod.1.season, echo=F}
+
+# warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Count by Season', out.width = '45%', fig.pos="htbp", fig.show='hold'
 
 train.mod.1 %>%
   ggplot(aes(x=season, y=count, fill=season)) + geom_boxplot()
@@ -158,7 +163,9 @@ train.mod.1 %>%
 
 #### Holiday
 
-```{r, train.mod.1.holiday, echo=FALSE}
+```{r, train.mod.1.holiday, echo=F}
+
+# warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Count by Holiday/ Non-Holiday', out.width = '45%', fig.pos="htbp", fig.show='hold'
 
 train.mod.1 %>%
   ggplot(aes(x=holiday, y=count, fill=holiday)) + geom_boxplot()
@@ -167,10 +174,12 @@ train.mod.1 %>%
 ```
 
 
-### Working Day
+#### Working Day
 
 
-```{r, train.mod.1.workingday, echo=FALSE}
+```{r, train.mod.1.workingday, echo=F}
+
+# warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Count by Working Day/ Non-Working Day', out.width = '45%', fig.pos="htbp", fig.show='hold'
 
 train.mod.1 %>%
   ggplot(aes(x=workingday, y=count, fill=workingday)) + geom_boxplot()
@@ -182,10 +191,12 @@ train.mod.1 %>%
 
 \newpage
 
-### Weather
+#### Weather
 
 
-```{r, train.mod.1.weather, echo=FALSE}
+```{r, train.mod.1.weather, echo=F}
+
+# , warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Count by Weather Type', out.width = '45%', fig.pos="htbp", fig.show='hold'
 
 train.mod.1 %>%
   ggplot(aes(x=weather, y=count, fill=weather)) + geom_boxplot()
@@ -194,17 +205,10 @@ train.mod.1 %>%
 ```
 
 
-The datetime column was broken out into multiple factors as well so that we could visualize the components of each date and aggregate by different dimensions of the timestamp.  We felt this was also necessary due to the nature of how the train/ test data sets had been pre-split.  (i.e...with the first 19 days of the month holding the only true counts to validate our models against.)
-
-* Year
-* Month
-* Day
-* Hour
-
 
 ```{r, split-date, results='hide', message=FALSE, include=FALSE, echo=FALSE}
 
-library(lubridate)
+# library(lubridate)
 
 train.mod.1 <- train.mod.1 %>%
   mutate(year = as.factor(format(datetime, format = "%Y")), 
@@ -229,9 +233,20 @@ test.mod.1$month <-month(test.mod.1$datetime, label = TRUE, abbr = FALSE)
 ```
 
 
-### Month
+#### Count by Month
 
-```{r, train.mod.1.month, echo=FALSE}
+The datetime column was broken out into multiple factors as well so that we could visualize the components of each date and aggregate by different dimensions of the timestamp.  We felt this was also necessary due to the nature of how the train/ test data sets had been pre-split.  (i.e...with the first 19 days of the month holding the only true counts to validate our models against.)
+
+* Year
+* Month
+* Day
+* Hour
+
+
+```{r, train.mod.1.month, echo=F}
+
+
+# warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Count by Month', out.width = '45%', fig.pos="htbp", fig.show='hold'
 
 train.mod.1 %>%
   ggplot(aes(x=month, y=count, fill=month)) + geom_boxplot() + 
@@ -245,9 +260,9 @@ train.mod.1 %>%
 \newpage
 
 
-## Continuous Variables
+### Continuous Variables
 
-### Count by Temperature
+#### Count by Temperature
 
 ```{r, train.mod.1.temp, echo=FALSE}
 
@@ -262,7 +277,7 @@ train.mod.1 %>%
 
 \newpage
 
-### Count by "Feels like" Temperature
+#### Count by "Feels like" Temperature
 
 
 ```{r, train.mod.1.atemp, echo=FALSE}
@@ -278,7 +293,7 @@ train.mod.1 %>%
 
 \newpage
 
-### Count by Wind Speed
+#### Count by Wind Speed
 
 
 ```{r, train.mod.1.windspeed, echo=FALSE}
@@ -337,7 +352,7 @@ train.mod.1$registered <- NULL
 The team be utilizing the multiple linear regression techniques we've learned up to this point in the program to predict the bike rental deman on a given date and time.  The model will be evaluated on the Root Mean Squared Logarithmic Error, or RMSLE.  As this data represents hourly data collected, there is an obvious time component associated with this particular competition.  We wanted to gauge how effective mutiple linear regression would be when the assumption of indepdence is clearly violated.
 
 
-```{r remove-outliers, echo=FALSE}
+```{r remove-outliers, results='hide', message=FALSE, include=FALSE, echo=FALSE}
 
 # log transform the response variable
 train.mod.1$count <- log(train.mod.1$count)
@@ -361,7 +376,6 @@ train[5555, ] # 2012-01-09 18:00:00
 
 train.mod.1 <- train.mod.1 %>%
   filter(datetime != '2012-01-09 18:00:00')
-
 
 
 # train.mod.1  %>%
@@ -407,7 +421,7 @@ plot(cv.out)
 best.lambda <-cv.out$lambda.min  #Optimal penalty parameter.  You can make this call visually.
 lasso.pred=predict(lasso.model ,s=best.lambda ,newx=xtest)
 
-testMSE_LASSO<-mean((ytest-lasso.pred)^2)
+testMSE_LASSO <- mean((ytest-lasso.pred)^2)
 testMSE_LASSO
 
 
@@ -433,24 +447,54 @@ custom.model  <- lm(formula = custom.model.formula, data = train.mod.1)
 par(mfrow=c(2,2))
 plot(custom.model)
 
-# summary(custom.model)
+
+cst.sm <- summary(custom.model)
+cst.sm.coe <- cst.sm$coefficients
+
+# get the CIs for the coefficients
+cst.model.conf <- confint(custom.model)
+
+# cst.sm
+# cst.sm.coe
+# cst.model.conf
 
 ols_plot_resid_lev(custom.model)
 
 ```
 
-### RMSLE: Root Mean Squared Logarithmic Error Loss
+#### Custom RMSLE
 ```{r, cutom-rmsle, echo=FALSE}
 
-RMSLE(y_pred = floor(ifelse(custom.model$fitted.values < 0, 0, custom.model$fitted.values)), y_true = train.mod.1$count)
+# Root Mean Squared Logarithmic Error Loss
+
+RMSLE(y_pred = custom.model$fitted.values, y_true = train.mod.1$count)
 
 ```
+
+
+#### Kaggle Score
+
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 0.67517 for our custom model.  We scored better than around 24% of all public submission for the competition with this technique.
+
+
+
+\label{objective-one:custom-kaggle}
+
+
+
+
+```{r, custom-kaggle, echo=F, out.width='90%', fig.align='center'}
+knitr::include_graphics('./images/multiple_linear_regression_custom.png')
+```
+
+
+
 
 
 
 ### Stepwise
 
-```{r, stepwise-model,echo=FALSE}
+```{r, stepwise-model, echo=FALSE}
 
 train.mod.1$datetime <- NULL
 train.mod.1$datetime <- NULL
@@ -469,21 +513,59 @@ stw.model.formula <- count ~ hour + month + year + weather + temp + humidity + w
 stw.model <- lm(stw.model.formula,
                data = train.mod.1)
 
-# summary(stw.model)
+stw.sm <- summary(stw.model)
+stw.sm.coe <- stw.sm$coefficients
 
-test$count <- predict.lm(stw.model, test.mod.1)
-test$count <- exp(test$count)
+# get the CIs for the coefficients
+stw.model.conf <- confint(stw.model)
+
+# stw.sm
+# stw.sm.coe
+# stw.model.conf
+
+# test$count <- predict.lm(stw.model, test.mod.1)
+# test$count <- exp(test$count)
 
 # when less that 0, replace
-test <- test %>%
-  mutate(count = round(ifelse(count < 0, 0, count)))
-
-head(test)
+# test <- test %>%
+#   mutate(count = round(ifelse(count < 0, 0, count)))
 
 # submit <- test %>% subset(select=c(datetime, count))
 # write.csv(submit, file = "./stepwise_kaggle_submission.csv", row.names = F)
 
 ```
+
+
+#### Stepwise RMSLE
+
+
+The Root Mean Squared Logarithmic Error Loss calculation against the train data set.
+
+```{r, stepwise-rmsle, echo=FALSE}
+
+# Root Mean Squared Logarithmic Error Loss
+
+RMSLE(y_pred = stw.model $fitted.values, y_true = train.mod.1$count)
+
+```
+
+
+#### Kaggle Score
+
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 0.64765 for our stepwise model.  We scored better than around 24% of all public submission for the competition with this technique, which was almost identical to that of the custom model with an interaction.
+
+
+
+\label{objective-one:stepwise-kaggle}
+
+
+
+
+```{r, stepwise-kaggle, echo=F, out.width='90%', fig.align='center'}
+knitr::include_graphics('./images/multiple_linear_regression_stepwise.png')
+```
+
+
 
 
 
@@ -497,10 +579,6 @@ head(test)
 * Independence
 
 ## Comparing Competing Models
-
-
-
-
 
 
 \newpage
@@ -526,28 +604,196 @@ head(test)
 ## Question of Interest
 
 
-[Discuss time series method]
+As the independence assumption from Objective I appears to have been violated, the team wanted to apply the time series analysis techniques we've learned up to this point in the MSDS program in an attempt to address.  The primary goal was to compare and contrast the performance of auto arima models versus those that we modeled on our own. 
+
+Additionally, we wanted to compare the Kaggle submission to that from Objective I to see if our predictions were better or worse than from the prior objective.
+
+## Data Preperation
+
+As the data had been pre-split monthly, we needed to make our predictions from the 20th of each month and on for each year of recorded bike rentals.  (2011 and 2012)  The approach has been summarized with the steps below.
 
 
-**Time-Series Analysis**
+  1. Log the response variable
+  
+  2. Loop through years
+
+  3. Loop through months
+
+  4. Fit AR model
+
+  5. Forcast x number of observations based on the number of rows from test dataframe and impute the count from the time series forecast
 
 
-[Details goe here]
+
+\newpage
+
+## Comparing Competing Models
+    
+
+### Auto Arima
+
+
+```{r, split-date-arima, results='hide', message=FALSE, include=FALSE, echo=FALSE}
+
+# copy the test and train data sets for Objective 2
+train.mod.2 <- train
+test.mod.2 <- test
+
+train.mod.2 <- train.mod.2 %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
+
+test.mod.2 <- test.mod.2 %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
+
+# Convert Months to Ordered Factor 
+train.mod.2$month <-month(train.mod.2$datetime, label = TRUE, abbr = FALSE)
+test.mod.2$month <-month(test.mod.2$datetime, label = TRUE, abbr = FALSE)
+
+# train.mod.2
+# test.mod.2
+
+```
+
+```{r auto-arima, results='hide', message=FALSE, include=FALSE, echo=FALSE}
+
+train1arm <- train.mod.2 %>%
+  filter(year == '2011' & month == 'January') 
+
+test1arm <- test.mod.2 %>%
+  filter(year == '2011' & month == 'January') %>%
+  mutate(count = NA)
+
+### Log the response variable
+train1arm$count = log(train1arm$count)
+
+autoarm <- auto.arima(train1arm$count, D=1)
+
+number = nrow(test1arm)
+
+acf(autoarm$residuals)
+pacf(autoarm$residuals)
+
+# checkresiduals(autoarm)
+
+fcst <- forecast(autoarm, h=number)
+
+# autoplot(fcst)
+
+# point estimate (mean)
+test1arm$count <- fcst$mean
+
+RMSLE(y_pred = fcst$fitted, y_true = train1arm$count)
+
+summary(autoarm)
+
+```
+
+```{r, auto-arima-plot-1, echo=F, warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Auto Arima Residual Plots', out.width = '45%', fig.pos="htbp", fig.show='hold'}
+
+checkresiduals(autoarm)
+
+```
+
+
+```{r, auto-arima-plot-2, echo=F, warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Auto Arima Forecasts', out.width = '45%', fig.pos="htbp", fig.show='hold'}
+
+autoplot(fcst)
+
+```
+
+\newpage
+
+
+### Auto Regression
+
+
+```{r, arima-25, results='hide', message=FALSE, include=FALSE, echo=FALSE}
+train1 <- train.mod.2 %>%
+  filter(year == '2011' & month == 'January') 
+
+test1 <- test.mod.2 %>%
+  filter(year == '2011' & month == 'January') %>%
+  mutate(count = NA)
+
+
+### Log the response variable
+train1$count = log(train1$count)
+
+AR25 <- arima(train1$count,order=c(25,0,0))
+
+number = nrow(test1)
+
+acf(AR25$residuals)
+pacf(AR25$residuals)
+
+# checkresiduals(AR25)
+
+fcst <- forecast(AR25, h=number)
+
+# autoplot(fcst)
+
+# point estimate (mean)
+test1$count <- fcst$mean
+
+
+RMSLE(y_pred = fcst$fitted, y_true = train1$count)
+summary(AR25)
+
+```
+
+```{r, arima-25-plot-1, echo=F, warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Arima (25) Residual Plots', out.width = '45%', fig.pos="htbp", fig.show='hold'}
+
+checkresiduals(AR25)
+
+```
+
+
+```{r, arima-25-plot-2, echo=F, warning=F, fig.width=5, fig.height=5, fig.align='center', fig.cap='Arima (25) Forecasts', out.width = '45%', fig.pos="htbp", fig.show='hold'}
+
+autoplot(fcst)
+
+```
+
+\newpage
+
+
+#### Kaggle Score
+
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 1.01847 for our AR25 model.  We scored better than only 14.48% of all public submission for the competition which was considerably worse than our score from both of the multiple linear regression models above.
+
+
+
+\label{objective-two:ar25-kaggle}
+
+
+
+
+```{r, ar25-kaggle, echo=F, out.width='90%', fig.align='center'}
+knitr::include_graphics('./images/time_series_ar25.png')
+```
+
 
 
 ## Model Assumption Assessment
 
+Both the ARIMA and AR 25 models showed a constant mean and variance for the timespan of the observations.  The auto-correlations however were noticably better for the AR 25 graph.  The error terms were also slightly improved which is the reason we elected to not go with the automated selection approach.
 
-[Model Assumption Assessment]
+* Constant Mean
+* Constant Variance 
+* Constant auto-correlations
 
-
-## Comparing Competing Models
 
 
 ## Conclusion
 
 
-[Conclusion]
+Although the data set was found to be serially correlated, ultimately applying time series techniques was not sufficient to improve our RMSLE above and beyond the multiple linear regression techniques from objective one.  Again, this likely had more to due with the fact that we were attempting to predict future observations 10 plus days in advance on a monthly basis.  And with the seasonal nature of our hourly observations, the accuracy of the preduction became less accurate over time and showed a regression to the mean after only a few days worth of predictions.  The immediate observations however, within 24 to 48 hours, visually at least showed much better predictive trends.  
 
 
 \newpage
@@ -556,6 +802,229 @@ head(test)
 
 
 ## Code
+
+### R Code For Objective I
+
+```{r, objective-one, eval=FALSE}
+
+
+
+```
+
+\newpage
+
+### R Code For Objective II
+
+```{r, objective-two, eval=FALSE}
+
+### Library Imports
+
+library(tidyverse)
+# Date manipulation
+library(lubridate)
+# RMLSE
+library(MLmetrics)
+# Time Series Analysis
+library(tseries)
+library(forecast)
+
+
+### Load the csv data
+train <- read_csv('../../../data/train.csv')
+test <- read_csv('../../../data/test.csv')
+
+
+### Categorical Factors
+train$season <- factor(train$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+test$season <- factor(test$season, labels = c("Spring", "Summer", "Fall", "Winter"))
+
+table(train$season)
+
+train$holiday <- factor(train$holiday, labels = c("No", "Yes"))
+test$holiday <- factor(test$holiday, labels = c("No", "Yes"))
+
+table(train$holiday)
+
+train$workingday <- factor(train$workingday, labels = c("No", "Yes"))
+test$workingday <- factor(test$workingday, labels = c("No", "Yes"))
+
+table(train$workingday)
+
+train$weather <- factor(train$weather, labels = c("Great", "Good", "Average", "Poor"))
+test$weather <- factor(test$weather, labels = c("Great", "Good", "Average", "Poor"))
+
+table(train$weather)
+
+
+### Split Date-Time
+train <- train %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
+
+test <- test %>%
+  mutate(year = as.factor(format(datetime, format = "%Y")), 
+         month = as.numeric(format(datetime, format = "%m")), 
+         day = as.factor(format(datetime, format = "%d")),
+         hour = as.factor(format(datetime, format = "%H")))
+
+
+### Convert months to ordinal factor
+train$month <-month(train$datetime, label = TRUE, abbr = FALSE)
+test$month <-month(test$datetime, label = TRUE, abbr = FALSE)
+
+
+## 2011
+
+### January
+
+#### Auto Arima
+
+train1arm <- train %>%
+  filter(year == '2011' & month == 'January') %>%
+  select(datetime, count)
+
+test1arm <- test %>%
+  filter(year == '2011' & month == 'January') %>%
+  mutate(count = NA) %>%
+  select(datetime, count)
+
+
+### Log the response variable
+train1arm$count = log(train1arm$count)
+
+
+autoarm <- auto.arima(train1arm$count, D=1)
+
+
+number = nrow(test1arm)
+
+acf(autoarm$residuals)
+pacf(autoarm$residuals)
+
+checkresiduals(autoarm)
+
+fcst <- forecast(autoarm, h=number)
+
+autoplot(fcst)
+
+# point estimate (mean)
+test1arm$count <- fcst$mean
+
+RMSLE(y_pred = fcst$fitted, y_true = train1arm$count)
+
+summary(autoarm)
+
+
+#### AR 25
+
+train1 <- train %>%
+  filter(year == '2011' & month == 'January') %>%
+  select(datetime, count)
+
+test1 <- test %>%
+  filter(year == '2011' & month == 'January') %>%
+  mutate(count = NA) %>%
+  select(datetime, count)
+
+
+### Log the response variable
+train1$count = log(train1$count)
+
+
+AR25 <- arima(train1$count,order=c(25,0,0))
+
+number = nrow(test1)
+
+acf(AR25$residuals)
+pacf(AR25$residuals)
+
+checkresiduals(AR25)
+
+fcst <- forecast(AR25, h=number)
+
+autoplot(fcst)
+
+# point estimate (mean)
+test1$count <- fcst$mean
+
+
+RMSLE(y_pred = fcst$fitted, y_true = train1$count)
+summary(AR25)
+
+
+#
+#
+#
+
+## 2012
+
+### December
+
+train24 <- train %>%
+  filter(year == '2012' & month == 'December') %>%
+  select(datetime, count)
+
+test24 <- test %>%
+  filter(year == '2012' & month == 'December') %>%
+  mutate(count = NA) %>%
+  select(datetime, count)
+
+
+### Log the response variable
+train24$count = log(train24$count)
+
+
+AR25 <- arima(train24$count,order=c(25,0,0))
+
+number = nrow(test24)
+
+acf(AR25$residuals)
+pacf(AR25$residuals)
+
+checkresiduals(AR25)
+
+fcst <- forecast(AR25, h=number)
+
+autoplot(fcst)
+
+# point estimate (mean)
+test24$count <- fcst$mean
+
+
+RMSLE(y_pred = fcst$fitted, y_true = train24$count)
+
+summary(AR25)
+
+
+### Combine all of the individual data frames
+
+combined <- data.frame(datetime=character(),
+                 count=double(), 
+                 stringsAsFactors=FALSE) 
+
+
+
+combined <- bind_rows(test1, test2, test3, test4, test5, 
+                      test6, test7, test8, test9, test10, 
+                      test11, test12,test13, test14, test15, 
+                      test16, test17, test18, test19, test20, 
+                      test21, test22, test23, test24)
+
+
+combined <- combined %>%
+  mutate(count = round(exp(count)))
+
+
+# combined
+# write.csv(combined, file = "./ts_kaggle_submission.csv", row.names = F)
+
+
+
+```
+
+
 
 \newpage
 

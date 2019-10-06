@@ -175,30 +175,27 @@ Column Name & Type & Description\tabularnewline
 9. windspeed & Float & wind speed\tabularnewline
 10. casual & Integer & count of casual users\tabularnewline
 11. registered & Integer & count of registered users\tabularnewline
-12. count & Integer & count of total users \texttt{response\ variable}\tabularnewline
+12. count & Integer & count of total users (\emph{response variable})\tabularnewline
 \bottomrule
 \end{longtable}
 
-** The test data set lacks the casual, registered and count variables.
+\emph{Note that the test data set lacks the casual, registered and count variables.}
 
 \newpage
 
 \hypertarget{exploratory-data-analysis}{%
 \section{Exploratory Data Analysis}\label{exploratory-data-analysis}}
 
-\begin{itemize}
-\tightlist
-\item
-  Plotting Explanatory vs.~Response Variables
-\end{itemize}
+\hypertarget{plotting-against-response-variable}{%
+\subsection{Plotting against Response Variable}\label{plotting-against-response-variable}}
 
 \hypertarget{categorical-variables}{%
-\subsection{Categorical Variables}\label{categorical-variables}}
+\subsubsection{Categorical Variables}\label{categorical-variables}}
 
 Several numeric variables were found to be better suited to categorization and were converted to factors.
 
 \hypertarget{season}{%
-\subsubsection{Season}\label{season}}
+\paragraph{Season}\label{season}}
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -222,16 +219,19 @@ Season & Label & Description\tabularnewline
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf}
 
 \hypertarget{working-day}{%
-\subsubsection{Working Day}\label{working-day}}
+\paragraph{Working Day}\label{working-day}}
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf}
 
 \newpage
 
 \hypertarget{weather}{%
-\subsubsection{Weather}\label{weather}}
+\paragraph{Weather}\label{weather}}
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf}
+
+\hypertarget{count-by-month}{%
+\paragraph{Count by Month}\label{count-by-month}}
 
 The datetime column was broken out into multiple factors as well so that we could visualize the components of each date and aggregate by different dimensions of the timestamp. We felt this was also necessary due to the nature of how the train/ test data sets had been pre-split. (i.e\ldots{}with the first 19 days of the month holding the only true counts to validate our models against.)
 
@@ -247,32 +247,29 @@ The datetime column was broken out into multiple factors as well so that we coul
   Hour
 \end{itemize}
 
-\hypertarget{month}{%
-\subsubsection{Month}\label{month}}
-
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf}
 
 \newpage
 
 \hypertarget{continuous-variables}{%
-\subsection{Continuous Variables}\label{continuous-variables}}
+\subsubsection{Continuous Variables}\label{continuous-variables}}
 
 \hypertarget{count-by-temperature}{%
-\subsubsection{Count by Temperature}\label{count-by-temperature}}
+\paragraph{Count by Temperature}\label{count-by-temperature}}
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf}
 
 \newpage
 
 \hypertarget{count-by-feels-like-temperature}{%
-\subsubsection{Count by ``Feels like'' Temperature}\label{count-by-feels-like-temperature}}
+\paragraph{Count by ``Feels like'' Temperature}\label{count-by-feels-like-temperature}}
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf}
 
 \newpage
 
 \hypertarget{count-by-wind-speed}{%
-\subsubsection{Count by Wind Speed}\label{count-by-wind-speed}}
+\paragraph{Count by Wind Speed}\label{count-by-wind-speed}}
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf}
 
@@ -304,33 +301,6 @@ There are several variables with a relatively high level of covariance from the 
 \subsection{Question of Interest}\label{question-of-interest}}
 
 The team be utilizing the multiple linear regression techniques we've learned up to this point in the program to predict the bike rental deman on a given date and time. The model will be evaluated on the Root Mean Squared Logarithmic Error, or RMSLE. As this data represents hourly data collected, there is an obvious time component associated with this particular competition. We wanted to gauge how effective mutiple linear regression would be when the assumption of indepdence is clearly violated.
-
-\begin{verbatim}
-## # A tibble: 12 x 5
-##    month      mean    sd median observations
-##    <ord>     <dbl> <dbl>  <dbl>        <int>
-##  1 January    3.78  1.47   4.17          884
-##  2 February   3.98  1.51   4.36          901
-##  3 March      4.19  1.61   4.61          901
-##  4 April      4.46  1.53   4.89          909
-##  5 May        4.76  1.43   5.20          912
-##  6 June       4.89  1.38   5.33          912
-##  7 July       4.90  1.35   5.34          912
-##  8 August     4.86  1.37   5.26          912
-##  9 September  4.81  1.42   5.24          909
-## 10 October    4.79  1.42   5.19          911
-## 11 November   4.65  1.40   5.09          911
-## 12 December   4.52  1.43   4.93          912
-\end{verbatim}
-
-\begin{verbatim}
-## # A tibble: 1 x 12
-##   datetime            season holiday workingday weather  temp atemp
-##   <dttm>               <dbl>   <dbl>      <dbl>   <dbl> <dbl> <dbl>
-## 1 2012-01-06 13:00:00      1       0          1       1  16.4  20.5
-## # ... with 5 more variables: humidity <dbl>, windspeed <dbl>,
-## #   casual <dbl>, registered <dbl>, count <dbl>
-\end{verbatim}
 
 \hypertarget{model-selection}{%
 \subsection{Model Selection}\label{model-selection}}
@@ -398,7 +368,7 @@ The team be utilizing the multiple linear regression techniques we've learned up
 \NormalTok{best.lambda <-cv.out}\OperatorTok{$}\NormalTok{lambda.min  }\CommentTok{#Optimal penalty parameter.  You can make this call visually.}
 \NormalTok{lasso.pred=}\KeywordTok{predict}\NormalTok{(lasso.model ,}\DataTypeTok{s=}\NormalTok{best.lambda ,}\DataTypeTok{newx=}\NormalTok{xtest)}
 
-\NormalTok{testMSE_LASSO<-}\KeywordTok{mean}\NormalTok{((ytest}\OperatorTok{-}\NormalTok{lasso.pred)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{testMSE_LASSO <-}\StringTok{ }\KeywordTok{mean}\NormalTok{((ytest}\OperatorTok{-}\NormalTok{lasso.pred)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
 \NormalTok{testMSE_LASSO}
 \end{Highlighting}
 \end{Shaded}
@@ -422,28 +392,42 @@ We developed the best fitting model with a custom selection of variables after h
 
 \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-1.pdf} \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-2.pdf}
 
-\hypertarget{rmsle-root-mean-squared-logarithmic-error-loss}{%
-\subsubsection{RMSLE: Root Mean Squared Logarithmic Error Loss}\label{rmsle-root-mean-squared-logarithmic-error-loss}}
+\hypertarget{custom-rmsle}{%
+\paragraph{Custom RMSLE}\label{custom-rmsle}}
 
 \begin{verbatim}
-## [1] 0.1923972
+## [1] 0.1534782
 \end{verbatim}
+
+\hypertarget{kaggle-score}{%
+\paragraph{Kaggle Score}\label{kaggle-score}}
+
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 0.67517 for our custom model. We scored better than around 24\% of all public submission for the competition with this technique.
+
+\label{objective-one:custom-kaggle}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{./images/multiple_linear_regression_custom} \end{center}
 
 \hypertarget{stepwise}{%
 \subsubsection{Stepwise}\label{stepwise}}
 
+\hypertarget{stepwise-rmsle}{%
+\paragraph{Stepwise RMSLE}\label{stepwise-rmsle}}
+
+The Root Mean Squared Logarithmic Error Loss calculation against the train data set.
+
 \begin{verbatim}
-## # A tibble: 6 x 10
-##   datetime            season holiday workingday weather  temp atemp
-##   <dttm>               <dbl>   <dbl>      <dbl>   <dbl> <dbl> <dbl>
-## 1 2011-01-20 00:00:00      1       0          1       1 10.7   11.4
-## 2 2011-01-20 01:00:00      1       0          1       1 10.7   13.6
-## 3 2011-01-20 02:00:00      1       0          1       1 10.7   13.6
-## 4 2011-01-20 03:00:00      1       0          1       1 10.7   12.9
-## 5 2011-01-20 04:00:00      1       0          1       1 10.7   12.9
-## 6 2011-01-20 05:00:00      1       0          1       1  9.84  11.4
-## # ... with 3 more variables: humidity <dbl>, windspeed <dbl>, count <dbl>
+## [1] 0.1469294
 \end{verbatim}
+
+\hypertarget{kaggle-score-1}{%
+\paragraph{Kaggle Score}\label{kaggle-score-1}}
+
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 0.64765 for our stepwise model. We scored better than around 24\% of all public submission for the competition with this technique, which was almost identical to that of the custom model with an interaction.
+
+\label{objective-one:stepwise-kaggle}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{./images/multiple_linear_regression_stepwise} \end{center}
 
 \newpage
 
@@ -488,24 +472,128 @@ We developed the best fitting model with a custom selection of variables after h
 \hypertarget{question-of-interest-1}{%
 \subsection{Question of Interest}\label{question-of-interest-1}}
 
-{[}Discuss time series method{]}
+As the independence assumption from Objective I appears to have been violated, the team wanted to apply the time series analysis techniques we've learned up to this point in the MSDS program in an attempt to address. The primary goal was to compare and contrast the performance of auto arima models versus those that we modeled on our own.
 
-\textbf{Time-Series Analysis}
+Additionally, we wanted to compare the Kaggle submission to that from Objective I to see if our predictions were better or worse than from the prior objective.
 
-{[}Details goe here{]}
+\hypertarget{data-preperation}{%
+\subsection{Data Preperation}\label{data-preperation}}
 
-\hypertarget{model-assumption-assessment}{%
-\subsection{Model Assumption Assessment}\label{model-assumption-assessment}}
+As the data had been pre-split monthly, we needed to make our predictions from the 20th of each month and on for each year of recorded bike rentals. (2011 and 2012) The approach has been summarized with the steps below.
 
-\protect\hyperlink{model-assumption-assessment}{Model Assumption Assessment}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Log the response variable
+\item
+  Loop through years
+\item
+  Loop through months
+\item
+  Fit AR model
+\item
+  Forcast x number of observations based on the number of rows from test dataframe and impute the count from the time series forecast
+\end{enumerate}
+
+\newpage
 
 \hypertarget{comparing-competing-models-1}{%
 \subsection{Comparing Competing Models}\label{comparing-competing-models-1}}
 
+\hypertarget{auto-arima}{%
+\subsubsection{Auto Arima}\label{auto-arima}}
+
+\begin{verbatim}
+## 
+##  Ljung-Box test
+## 
+## data:  Residuals from ARIMA(4,0,4) with non-zero mean
+## Q* = 10.049, df = 3, p-value = 0.01816
+## 
+## Model df: 9.   Total lags used: 12
+\end{verbatim}
+
+\begin{figure}[htbp]
+
+{\centering \includegraphics[width=0.45\linewidth]{BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1} 
+
+}
+
+\caption{Auto Arima Residual Plots}\label{fig:auto-arima-plot-1}
+\end{figure}
+
+\begin{figure}[htbp]
+
+{\centering \includegraphics[width=0.45\linewidth]{BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1} 
+
+}
+
+\caption{Auto Arima Forecasts}\label{fig:auto-arima-plot-2}
+\end{figure}
+
+\newpage
+
+\hypertarget{auto-regression}{%
+\subsubsection{Auto Regression}\label{auto-regression}}
+
+\begin{verbatim}
+## 
+##  Ljung-Box test
+## 
+## data:  Residuals from ARIMA(25,0,0) with non-zero mean
+## Q* = 11.131, df = 3, p-value = 0.01104
+## 
+## Model df: 26.   Total lags used: 29
+\end{verbatim}
+
+\begin{figure}[htbp]
+
+{\centering \includegraphics[width=0.45\linewidth]{BikeSharingDemand_files/figure-latex/arima-25-plot-1-1} 
+
+}
+
+\caption{Arima (25) Residual Plots}\label{fig:arima-25-plot-1}
+\end{figure}
+
+\begin{figure}[htbp]
+
+{\centering \includegraphics[width=0.45\linewidth]{BikeSharingDemand_files/figure-latex/arima-25-plot-2-1} 
+
+}
+
+\caption{Arima (25) Forecasts}\label{fig:arima-25-plot-2}
+\end{figure}
+
+\newpage
+
+\hypertarget{kaggle-score-2}{%
+\paragraph{Kaggle Score}\label{kaggle-score-2}}
+
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 1.01847 for our AR25 model. We scored better than only 14.48\% of all public submission for the competition which was considerably worse than our score from both of the multiple linear regression models above.
+
+\label{objective-two:ar25-kaggle}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{./images/time_series_ar25} \end{center}
+
+\hypertarget{model-assumption-assessment}{%
+\subsection{Model Assumption Assessment}\label{model-assumption-assessment}}
+
+Both the ARIMA and AR 25 models showed a constant mean and variance for the timespan of the observations. The auto-correlations however were noticably better for the AR 25 graph. The error terms were also slightly improved which is the reason we elected to not go with the automated selection approach.
+
+\begin{itemize}
+\tightlist
+\item
+  Constant Mean
+\item
+  Constant Variance
+\item
+  Constant auto-correlations
+\end{itemize}
+
 \hypertarget{conclusion-1}{%
 \subsection{Conclusion}\label{conclusion-1}}
 
-\protect\hyperlink{conclusion-1}{Conclusion}
+Although the data set was found to be serially correlated, ultimately applying time series techniques was not sufficient to improve our RMSLE above and beyond the multiple linear regression techniques from objective one. Again, this likely had more to due with the fact that we were attempting to predict future observations 10 plus days in advance on a monthly basis. And with the seasonal nature of our hourly observations, the accuracy of the preduction became less accurate over time and showed a regression to the mean after only a few days worth of predictions. The immediate observations however, within 24 to 48 hours, visually at least showed much better predictive trends.
 
 \newpage
 
@@ -514,6 +602,221 @@ We developed the best fitting model with a custom selection of variables after h
 
 \hypertarget{code}{%
 \subsection{Code}\label{code}}
+
+\hypertarget{r-code-for-objective-i}{%
+\subsubsection{R Code For Objective I}\label{r-code-for-objective-i}}
+
+\newpage
+
+\hypertarget{r-code-for-objective-ii}{%
+\subsubsection{R Code For Objective II}\label{r-code-for-objective-ii}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{### Library Imports}
+
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\CommentTok{# Date manipulation}
+\KeywordTok{library}\NormalTok{(lubridate)}
+\CommentTok{# RMLSE}
+\KeywordTok{library}\NormalTok{(MLmetrics)}
+\CommentTok{# Time Series Analysis}
+\KeywordTok{library}\NormalTok{(tseries)}
+\KeywordTok{library}\NormalTok{(forecast)}
+
+
+\CommentTok{### Load the csv data}
+\NormalTok{train <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'../../../data/train.csv'}\NormalTok{)}
+\NormalTok{test <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'../../../data/test.csv'}\NormalTok{)}
+
+
+\CommentTok{### Categorical Factors}
+\NormalTok{train}\OperatorTok{$}\NormalTok{season <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{season, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Spring"}\NormalTok{, }\StringTok{"Summer"}\NormalTok{, }\StringTok{"Fall"}\NormalTok{, }\StringTok{"Winter"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{season <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{season, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Spring"}\NormalTok{, }\StringTok{"Summer"}\NormalTok{, }\StringTok{"Fall"}\NormalTok{, }\StringTok{"Winter"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{season)}
+
+\NormalTok{train}\OperatorTok{$}\NormalTok{holiday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{holiday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{holiday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{holiday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{holiday)}
+
+\NormalTok{train}\OperatorTok{$}\NormalTok{workingday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{workingday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{workingday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{workingday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{workingday)}
+
+\NormalTok{train}\OperatorTok{$}\NormalTok{weather <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{weather, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Great"}\NormalTok{, }\StringTok{"Good"}\NormalTok{, }\StringTok{"Average"}\NormalTok{, }\StringTok{"Poor"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{weather <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{weather, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Great"}\NormalTok{, }\StringTok{"Good"}\NormalTok{, }\StringTok{"Average"}\NormalTok{, }\StringTok{"Poor"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{weather)}
+
+
+\CommentTok{### Split Date-Time}
+\NormalTok{train <-}\StringTok{ }\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{year =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%Y"}\NormalTok{)), }
+         \DataTypeTok{month =} \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%m"}\NormalTok{)), }
+         \DataTypeTok{day =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%d"}\NormalTok{)),}
+         \DataTypeTok{hour =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%H"}\NormalTok{)))}
+
+\NormalTok{test <-}\StringTok{ }\NormalTok{test }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{year =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%Y"}\NormalTok{)), }
+         \DataTypeTok{month =} \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%m"}\NormalTok{)), }
+         \DataTypeTok{day =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%d"}\NormalTok{)),}
+         \DataTypeTok{hour =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%H"}\NormalTok{)))}
+
+
+\CommentTok{### Convert months to ordinal factor}
+\NormalTok{train}\OperatorTok{$}\NormalTok{month <-}\KeywordTok{month}\NormalTok{(train}\OperatorTok{$}\NormalTok{datetime, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{abbr =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{test}\OperatorTok{$}\NormalTok{month <-}\KeywordTok{month}\NormalTok{(test}\OperatorTok{$}\NormalTok{datetime, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{abbr =} \OtherTok{FALSE}\NormalTok{)}
+
+
+\CommentTok{## 2011}
+
+\CommentTok{### January}
+
+\CommentTok{#### Auto Arima}
+
+\NormalTok{train1arm <-}\StringTok{ }\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ '2011'} \OperatorTok{&}\StringTok{ }\NormalTok{month }\OperatorTok{==}\StringTok{ 'January'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(datetime, count)}
+
+\NormalTok{test1arm <-}\StringTok{ }\NormalTok{test }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ '2011'} \OperatorTok{&}\StringTok{ }\NormalTok{month }\OperatorTok{==}\StringTok{ 'January'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{count =} \OtherTok{NA}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(datetime, count)}
+
+
+\CommentTok{### Log the response variable}
+\NormalTok{train1arm}\OperatorTok{$}\NormalTok{count =}\StringTok{ }\KeywordTok{log}\NormalTok{(train1arm}\OperatorTok{$}\NormalTok{count)}
+
+
+\NormalTok{autoarm <-}\StringTok{ }\KeywordTok{auto.arima}\NormalTok{(train1arm}\OperatorTok{$}\NormalTok{count, }\DataTypeTok{D=}\DecValTok{1}\NormalTok{)}
+
+
+\NormalTok{number =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(test1arm)}
+
+\KeywordTok{acf}\NormalTok{(autoarm}\OperatorTok{$}\NormalTok{residuals)}
+\KeywordTok{pacf}\NormalTok{(autoarm}\OperatorTok{$}\NormalTok{residuals)}
+
+\KeywordTok{checkresiduals}\NormalTok{(autoarm)}
+
+\NormalTok{fcst <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(autoarm, }\DataTypeTok{h=}\NormalTok{number)}
+
+\KeywordTok{autoplot}\NormalTok{(fcst)}
+
+\CommentTok{# point estimate (mean)}
+\NormalTok{test1arm}\OperatorTok{$}\NormalTok{count <-}\StringTok{ }\NormalTok{fcst}\OperatorTok{$}\NormalTok{mean}
+
+\KeywordTok{RMSLE}\NormalTok{(}\DataTypeTok{y_pred =}\NormalTok{ fcst}\OperatorTok{$}\NormalTok{fitted, }\DataTypeTok{y_true =}\NormalTok{ train1arm}\OperatorTok{$}\NormalTok{count)}
+
+\KeywordTok{summary}\NormalTok{(autoarm)}
+
+
+\CommentTok{#### AR 25}
+
+\NormalTok{train1 <-}\StringTok{ }\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ '2011'} \OperatorTok{&}\StringTok{ }\NormalTok{month }\OperatorTok{==}\StringTok{ 'January'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(datetime, count)}
+
+\NormalTok{test1 <-}\StringTok{ }\NormalTok{test }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ '2011'} \OperatorTok{&}\StringTok{ }\NormalTok{month }\OperatorTok{==}\StringTok{ 'January'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{count =} \OtherTok{NA}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(datetime, count)}
+
+
+\CommentTok{### Log the response variable}
+\NormalTok{train1}\OperatorTok{$}\NormalTok{count =}\StringTok{ }\KeywordTok{log}\NormalTok{(train1}\OperatorTok{$}\NormalTok{count)}
+
+
+\NormalTok{AR25 <-}\StringTok{ }\KeywordTok{arima}\NormalTok{(train1}\OperatorTok{$}\NormalTok{count,}\DataTypeTok{order=}\KeywordTok{c}\NormalTok{(}\DecValTok{25}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+
+\NormalTok{number =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(test1)}
+
+\KeywordTok{acf}\NormalTok{(AR25}\OperatorTok{$}\NormalTok{residuals)}
+\KeywordTok{pacf}\NormalTok{(AR25}\OperatorTok{$}\NormalTok{residuals)}
+
+\KeywordTok{checkresiduals}\NormalTok{(AR25)}
+
+\NormalTok{fcst <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(AR25, }\DataTypeTok{h=}\NormalTok{number)}
+
+\KeywordTok{autoplot}\NormalTok{(fcst)}
+
+\CommentTok{# point estimate (mean)}
+\NormalTok{test1}\OperatorTok{$}\NormalTok{count <-}\StringTok{ }\NormalTok{fcst}\OperatorTok{$}\NormalTok{mean}
+
+
+\KeywordTok{RMSLE}\NormalTok{(}\DataTypeTok{y_pred =}\NormalTok{ fcst}\OperatorTok{$}\NormalTok{fitted, }\DataTypeTok{y_true =}\NormalTok{ train1}\OperatorTok{$}\NormalTok{count)}
+\KeywordTok{summary}\NormalTok{(AR25)}
+
+
+\CommentTok{#}
+\CommentTok{#}
+\CommentTok{#}
+
+\CommentTok{## 2012}
+
+\CommentTok{### December}
+
+\NormalTok{train24 <-}\StringTok{ }\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ '2012'} \OperatorTok{&}\StringTok{ }\NormalTok{month }\OperatorTok{==}\StringTok{ 'December'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(datetime, count)}
+
+\NormalTok{test24 <-}\StringTok{ }\NormalTok{test }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ '2012'} \OperatorTok{&}\StringTok{ }\NormalTok{month }\OperatorTok{==}\StringTok{ 'December'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{count =} \OtherTok{NA}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(datetime, count)}
+
+
+\CommentTok{### Log the response variable}
+\NormalTok{train24}\OperatorTok{$}\NormalTok{count =}\StringTok{ }\KeywordTok{log}\NormalTok{(train24}\OperatorTok{$}\NormalTok{count)}
+
+
+\NormalTok{AR25 <-}\StringTok{ }\KeywordTok{arima}\NormalTok{(train24}\OperatorTok{$}\NormalTok{count,}\DataTypeTok{order=}\KeywordTok{c}\NormalTok{(}\DecValTok{25}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+
+\NormalTok{number =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(test24)}
+
+\KeywordTok{acf}\NormalTok{(AR25}\OperatorTok{$}\NormalTok{residuals)}
+\KeywordTok{pacf}\NormalTok{(AR25}\OperatorTok{$}\NormalTok{residuals)}
+
+\KeywordTok{checkresiduals}\NormalTok{(AR25)}
+
+\NormalTok{fcst <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(AR25, }\DataTypeTok{h=}\NormalTok{number)}
+
+\KeywordTok{autoplot}\NormalTok{(fcst)}
+
+\CommentTok{# point estimate (mean)}
+\NormalTok{test24}\OperatorTok{$}\NormalTok{count <-}\StringTok{ }\NormalTok{fcst}\OperatorTok{$}\NormalTok{mean}
+
+
+\KeywordTok{RMSLE}\NormalTok{(}\DataTypeTok{y_pred =}\NormalTok{ fcst}\OperatorTok{$}\NormalTok{fitted, }\DataTypeTok{y_true =}\NormalTok{ train24}\OperatorTok{$}\NormalTok{count)}
+
+\KeywordTok{summary}\NormalTok{(AR25)}
+
+
+\CommentTok{### Combine all of the individual data frames}
+
+\NormalTok{combined <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{datetime=}\KeywordTok{character}\NormalTok{(),}
+                 \DataTypeTok{count=}\KeywordTok{double}\NormalTok{(), }
+                 \DataTypeTok{stringsAsFactors=}\OtherTok{FALSE}\NormalTok{) }
+
+
+
+\NormalTok{combined <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(test1, test2, test3, test4, test5, }
+\NormalTok{                      test6, test7, test8, test9, test10, }
+\NormalTok{                      test11, test12,test13, test14, test15, }
+\NormalTok{                      test16, test17, test18, test19, test20, }
+\NormalTok{                      test21, test22, test23, test24)}
+
+
+\NormalTok{combined <-}\StringTok{ }\NormalTok{combined }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{count =} \KeywordTok{round}\NormalTok{(}\KeywordTok{exp}\NormalTok{(count)))}
+
+
+\CommentTok{# combined}
+\CommentTok{# write.csv(combined, file = "./ts_kaggle_submission.csv", row.names = F)}
+\end{Highlighting}
+\end{Shaded}
 
 \newpage
 
