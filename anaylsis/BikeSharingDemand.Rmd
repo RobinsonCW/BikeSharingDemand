@@ -65,7 +65,12 @@ test <- read_csv('./data/test.csv')
 
 # Introduction
 
-[Intro]
+The bike sharing system is a means of renting a bicycle via a network of kiosk locations throughout a city and returning it to a different place as needed.
+
+For this analysis, we are looking at the two years worth of Bikeshare data from Washington D.C.The training set includes data for first 19 days of each month and test data set comprises of 20th day to the end of month data.
+
+The objective is to predict the total count of bikes rented during each hour  covered by the test set.
+
 
 
 # Data Description
