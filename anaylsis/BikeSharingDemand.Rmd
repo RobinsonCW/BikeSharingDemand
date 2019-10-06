@@ -438,13 +438,6 @@ summary(custom.model)
 
 ols_plot_resid_lev(custom.model)
 
-# extract the model estimates from the model summary
-sm <- summary(custom.model)
-sm.coe <- sm$coefficients
-
-# get the CIs for the coefficients
-model.conf <- confint(custom.model)
-
 
 ```
 
@@ -494,14 +487,6 @@ head(test)
 # submit <- test %>% subset(select=c(datetime, count))
 # write.csv(submit, file = "./stepwise_kaggle_submission.csv", row.names = F)
 
-
-# extract the model estimates from the model summary
-sm <- summary(stw.model)
-sm.coe <- sm$coefficients
-
-# get the CIs for the coefficients
-model.conf <- confint(stw.model)
-
 ```
 
 
@@ -525,12 +510,49 @@ model.conf <- confint(stw.model)
 \newpage
 
 ## Parameters
+The following summarizes the paramters for estimates for the interaction model(custom) and the stepwise model.
 
-[Parameters]
+
+```{r, parameters,echo=FALSE}
+
+
+# extract the model estimates from the stepwise model summary
+stw.sm <- summary(stw.model)
+stw.sm.coe <- stw.sm$coefficients
+
+# get the CIs for the coefficients
+stw.model.conf <- confint(stw.model)
+
+stw.sm.coe
+stw.model.conf
+
+# extract the model estimates from the custom model summary
+cust.sm <- summary(custom.model)
+cust.sm.coe <- cust.sm$coefficients
+
+# get the CIs for the coefficients
+cust.model.conf <- confint(custom.model)
+
+cust.sm.coe
+cust.model.conf
+
+
+```
+
 
 ## Model Interpretation
 
-[Model Interpretation]
+**Stepwise Model**
+For a Stepwise model , keeping the temp and humidity constant a unit increase in windspeed is associated with a multiplicative change of 0.997 units in median of counts.The 95% confidence interval for the multiplicative change is =(0.994, .998)
+
+Keeping the temp and windspeed constant a unit increase in humidity is associated with a multiplicative change of 0.997 unit in median of counts.The 95% confidence interval for the multiplicative change is =(0.996, .998)
+
+Keeping humidity and temperature constant a  units change in temperature is associated with a multiplicative change of 1.03 units in median of counts.The 95% confidence interval for the multiplicative change is =(1.02, 1.031)
+
+\begin{equation}
+\mu \lbrace log(count) \rbrace = \hat{\beta_0} + \hat{\beta_1} (hour) +  \hat{\beta_2} (month) + \hat{\beta_3} (year) +
+\hat{\beta_4} (weather) +  \hat{\beta_5} (temp) + \hat{\beta_6} (humidity) + \hat{\beta_7} (workingday) +  \hat{\beta_8} (windspeed) + \hat{\beta_9} (holiday)(\#eq:Stepwise)
+\end{equation}
 
 
 ## Conclusion
