@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.8.14)  6 OCT 2019 12:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.8.14)  6 OCT 2019 19:28
 entering extended mode
 **./BikeSharingDemand.tex
 (BikeSharingDemand.tex
@@ -804,403 +804,451 @@ Package grfext Info: Graphics extension search list:
 (grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
-) [1
-
-{C:/Users/Chance/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-<BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf, id=140, 469.755
-pt x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf Graphic fil
-e (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.seaso
-n-1.pdf  used on input line 227.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[2 <./BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf>]
-<BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf, id=157, 469.75
-5pt x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf Graphic fi
-le (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.holid
-ay-1.pdf  used on input line 234.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-<BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf, id=158, 469
-.755pt x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf Graphic
- file (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.worki
-ngday-1.pdf  used on input line 239.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[3 <./BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf>] [4 <./Bi
-keSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf>]
-<BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf, id=181, 469.75
-5pt x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf Graphic fi
-le (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.weath
-er-1.pdf  used on input line 246.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[5 <./BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf>]
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 258.
-
-("C:\MiKTeX 2.9\tex/latex/lm\ts1lmr.fd"
-File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-<BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf, id=193, 469.755p
-t x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf Graphic file
- (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.month
--1.pdf  used on input line 267.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[6 <./BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf>]
-<BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf, id=206, 469.755pt
- x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf Graphic file 
-(type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.temp-
-1.pdf  used on input line 277.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[7 <./BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf>]
-<BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf, id=225, 469.755p
-t x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf Graphic file
- (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.atemp
--1.pdf  used on input line 284.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[8 <./BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf>]
-<BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf, id=242, 469.
-755pt x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf Graphic 
-file (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.winds
-peed-1.pdf  used on input line 291.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[9 <./BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf>]
-<BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf, id=259, 46
-9.755pt x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf Graphi
-c file (type pdf)
-<use BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.corr.
-matrix-1.pdf  used on input line 310.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[10 <./BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf>]
-
-Package xcolor Warning: Incompatible color definition on input line 328.
-
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 329.
-
-("C:\MiKTeX 2.9\tex/latex/lm\t1lmtt.fd"
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 332.
-
-Package xcolor Warning: Incompatible color definition on input line 344.
-
-
-Package xcolor Warning: Incompatible color definition on input line 344.
-
-
-Package xcolor Warning: Incompatible color definition on input line 364.
-
-
-Package xcolor Warning: Incompatible color definition on input line 379.
-
-
-Package xcolor Warning: Incompatible color definition on input line 379.
-
-
-Package xcolor Warning: Incompatible color definition on input line 379.
-
-[11]
-
-Package xcolor Warning: Incompatible color definition on input line 379.
-
-
-Package xcolor Warning: Incompatible color definition on input line 379.
-
-<BikeSharingDemand_files/figure-latex/unnamed-chunk-1-1.pdf, id=281, 469.755pt 
-x 325.215pt>
-File: BikeSharingDemand_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (
-type pdf)
-<use BikeSharingDemand_files/figure-latex/unnamed-chunk-1-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/unnamed-chunk-1-1
-.pdf  used on input line 381.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-
-Package xcolor Warning: Incompatible color definition on input line 383.
-
-
-Package xcolor Warning: Incompatible color definition on input line 391.
-
-
-Package xcolor Warning: Incompatible color definition on input line 391.
-
-[12 <./BikeSharingDemand_files/figure-latex/unnamed-chunk-1-1.pdf>]
-<BikeSharingDemand_files/figure-latex/custom-model-1.pdf, id=293, 469.755pt x 3
-25.215pt>
-File: BikeSharingDemand_files/figure-latex/custom-model-1.pdf Graphic file (typ
-e pdf)
-<use BikeSharingDemand_files/figure-latex/custom-model-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/custom-model-1.pd
-f  used on input line 410.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-<BikeSharingDemand_files/figure-latex/custom-model-2.pdf, id=294, 469.755pt x 3
-25.215pt>
-File: BikeSharingDemand_files/figure-latex/custom-model-2.pdf Graphic file (typ
-e pdf)
-<use BikeSharingDemand_files/figure-latex/custom-model-2.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/custom-model-2.pd
-f  used on input line 410.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 410--411
-[][]
- []
-
-[13 <./BikeSharingDemand_files/figure-latex/custom-model-1.pdf>]
-<./images/multiple_linear_regression_custom.png, id=305, 764.8575pt x 92.345pt>
-
-File: ./images/multiple_linear_regression_custom.png Graphic file (type png)
-<use ./images/multiple_linear_regression_custom.png>
-Package pdftex.def Info: ./images/multiple_linear_regression_custom.png  used o
-n input line 426.
-(pdftex.def)             Requested size: 422.77365pt x 51.04352pt.
-[14 <./BikeSharingDemand_files/figure-latex/custom-model-2.pdf> <./images/multi
-ple_linear_regression_custom.png>]
-<./images/multiple_linear_regression_stepwise.png, id=327, 788.9475pt x 94.3525
-pt>
-File: ./images/multiple_linear_regression_stepwise.png Graphic file (type png)
-<use ./images/multiple_linear_regression_stepwise.png>
-Package pdftex.def Info: ./images/multiple_linear_regression_stepwise.png  used
- on input line 447.
-(pdftex.def)             Requested size: 422.77495pt x 50.56085pt.
-[15 <./images/multiple_linear_regression_stepwise.png>] [16] [17] [18]
-<BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf, id=362, 361.35pt
- x 361.35pt>
-File: BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf Graphic file
- (type pdf)
-<use BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/auto-arima-plot-1
--1.pdf  used on input line 535.
-(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
-<BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf, id=363, 361.35pt
- x 361.35pt>
-File: BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf Graphic file
- (type pdf)
-<use BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/auto-arima-plot-2
--1.pdf  used on input line 544.
-(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
-[19pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
- has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.551 \newpage
-              pdfTeX warning (ext4): destination with the same identifier (name
-{figure.2}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.551 \newpage
-               <./BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf>
- <./BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf>]
-<BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf, id=383, 361.35pt x
- 361.35pt>
-File: BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf Graphic file (
-type pdf)
-<use BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/arima-25-plot-1-1
-.pdf  used on input line 568.
-(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
-<BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf, id=384, 361.35pt x
- 361.35pt>
-File: BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf Graphic file (
-type pdf)
-<use BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf>
-Package pdftex.def Info: BikeSharingDemand_files/figure-latex/arima-25-plot-2-1
-.pdf  used on input line 577.
-(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
-[20pdfTeX warning (ext4): destination with the same identifier (name{figure.3})
- has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.584 \newpage
-              pdfTeX warning (ext4): destination with the same identifier (name
-{figure.4}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.584 \newpage
-               <./BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf> <
-./BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf>]
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 593.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 169.
 
 ("C:\MiKTeX 2.9\tex/latex/lm\ot1lmr.fd"
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 593.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 169.
 
 ("C:\MiKTeX 2.9\tex/latex/lm\omllmm.fd"
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 593
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 169
 .
 ("C:\MiKTeX 2.9\tex/latex/lm\omslmsy.fd"
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 593
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 169
 .
 ("C:\MiKTeX 2.9\tex/latex/lm\omxlmex.fd"
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 593.
+(Font)              <10> on input line 169.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 593.
+(Font)              <7> on input line 169.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 593.
-LaTeX Font Info:    Try loading font information for U+msa on input line 593.
+(Font)              <5> on input line 169.
+LaTeX Font Info:    Try loading font information for U+msa on input line 169.
 ("C:\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) ("C:\MiKTeX 2.9\tex/latex/microtype\mt-msa.cfg"
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 593.
+LaTeX Font Info:    Try loading font information for U+msb on input line 169.
 ("C:\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) ("C:\MiKTeX 2.9\tex/latex/microtype\mt-msb.cfg"
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [21]
-<./images/time_series_ar25.png, id=407, 776.9025pt x 85.31876pt>
-File: ./images/time_series_ar25.png Graphic file (type png)
-<use ./images/time_series_ar25.png>
-Package pdftex.def Info: ./images/time_series_ar25.png  used on input line 612.
+) [1
 
-(pdftex.def)             Requested size: 422.7811pt x 46.42943pt.
-[22 <./images/time_series_ar25.png>] [23]
+{C:/Users/Chance/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] [2]
+<BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf, id=184, 469.755
+pt x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf Graphic fil
+e (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.seaso
+n-1.pdf  used on input line 233.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[3 <./BikeSharingDemand_files/figure-latex/train.mod.1.season-1.pdf>]
+<BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf, id=199, 469.75
+5pt x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf Graphic fi
+le (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.holid
+ay-1.pdf  used on input line 242.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[4 <./BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf>]
+<BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf, id=210, 469
+.755pt x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf Graphic
+ file (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.worki
+ngday-1.pdf  used on input line 251.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[5 <./BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf>]
+<BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf, id=221, 469.75
+5pt x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf Graphic fi
+le (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.weath
+er-1.pdf  used on input line 260.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[6 <./BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf>]
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 272.
 
-Package xcolor Warning: Incompatible color definition on input line 650.
+("C:\MiKTeX 2.9\tex/latex/lm\ts1lmr.fd"
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+<BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf, id=232, 469.755p
+t x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf Graphic file
+ (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.month
+-1.pdf  used on input line 281.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[7 <./BikeSharingDemand_files/figure-latex/train.mod.1.month-1.pdf>]
+<BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf, id=245, 469.755pt
+ x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf Graphic file 
+(type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.temp-
+1.pdf  used on input line 293.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[8 <./BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf>]
+<BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf, id=262, 469.755p
+t x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf Graphic file
+ (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.atemp
+-1.pdf  used on input line 300.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[9 <./BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf>]
+<BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf, id=278, 469.
+755pt x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf Graphic 
+file (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.winds
+peed-1.pdf  used on input line 309.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[10 <./BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf>]
+<BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf, id=294, 46
+9.755pt x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf Graphi
+c file (type pdf)
+<use BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/train.mod.1.corr.
+matrix-1.pdf  used on input line 328.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[11 <./BikeSharingDemand_files/figure-latex/train.mod.1.corr.matrix-1.pdf>]
+<BikeSharingDemand_files/figure-latex/lasso-predictors-1.pdf, id=306, 469.755pt
+ x 325.215pt>
+File: BikeSharingDemand_files/figure-latex/lasso-predictors-1.pdf Graphic file 
+(type pdf)
+<use BikeSharingDemand_files/figure-latex/lasso-predictors-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/lasso-predictors-
+1.pdf  used on input line 348.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[12 <./BikeSharingDemand_files/figure-latex/lasso-predictors-1.pdf>]
+<BikeSharingDemand_files/figure-latex/custom-model-1.pdf, id=320, 469.755pt x 3
+25.215pt>
+File: BikeSharingDemand_files/figure-latex/custom-model-1.pdf Graphic file (typ
+e pdf)
+<use BikeSharingDemand_files/figure-latex/custom-model-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/custom-model-1.pd
+f  used on input line 357.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<BikeSharingDemand_files/figure-latex/custom-model-2.pdf, id=321, 469.755pt x 3
+25.215pt>
+File: BikeSharingDemand_files/figure-latex/custom-model-2.pdf Graphic file (typ
+e pdf)
+<use BikeSharingDemand_files/figure-latex/custom-model-2.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/custom-model-2.pd
+f  used on input line 357.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 665
+Underfull \hbox (badness 10000) in paragraph at lines 357--358
+[][]
+ []
+
+[13 <./BikeSharingDemand_files/figure-latex/custom-model-1.pdf>] [14 <./BikeSha
+ringDemand_files/figure-latex/custom-model-2.pdf>]
+<./images/multiple_linear_regression_custom.png, id=343, 764.8575pt x 92.345pt>
+
+File: ./images/multiple_linear_regression_custom.png Graphic file (type png)
+<use ./images/multiple_linear_regression_custom.png>
+Package pdftex.def Info: ./images/multiple_linear_regression_custom.png  used o
+n input line 368.
+(pdftex.def)             Requested size: 422.77365pt x 51.04352pt.
+<./images/multiple_linear_regression_stepwise.png, id=345, 788.9475pt x 94.3525
+pt>
+File: ./images/multiple_linear_regression_stepwise.png Graphic file (type png)
+<use ./images/multiple_linear_regression_stepwise.png>
+Package pdftex.def Info: ./images/multiple_linear_regression_stepwise.png  used
+ on input line 382.
+(pdftex.def)             Requested size: 422.77495pt x 50.56085pt.
+[15 <./images/multiple_linear_regression_custom.png> <./images/multiple_linear_
+regression_stepwise.png>] [16] [17]
+
+Package xcolor Warning: Incompatible color definition on input line 427.
+
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 428.
+
+("C:\MiKTeX 2.9\tex/latex/lm\t1lmtt.fd"
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+
+Package xcolor Warning: Incompatible color definition on input line 431.
+
+
+Package xcolor Warning: Incompatible color definition on input line 431.
+
+[18]
+LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 494
 .
 ("C:\MiKTeX 2.9\tex/latex/lm\ts1lmtt.fd"
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
+) [19]
 
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
+Package xcolor Warning: Incompatible color definition on input line 501.
 
 
-Underfull \vbox (badness 10000) detected at line 855
+Package xcolor Warning: Incompatible color definition on input line 505.
+
+
+Package xcolor Warning: Incompatible color definition on input line 505.
+
+[20] [21] [22] [23]
+<BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf, id=413, 361.35pt
+ x 361.35pt>
+File: BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf Graphic file
+ (type pdf)
+<use BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/auto-arima-plot-1
+-1.pdf  used on input line 632.
+(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
+<BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf, id=414, 361.35pt
+ x 361.35pt>
+File: BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf Graphic file
+ (type pdf)
+<use BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/auto-arima-plot-2
+-1.pdf  used on input line 641.
+(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
+[24pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
+ has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.648 \newpage
+              pdfTeX warning (ext4): destination with the same identifier (name
+{figure.2}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.648 \newpage
+               <./BikeSharingDemand_files/figure-latex/auto-arima-plot-1-1.pdf>
+ <./BikeSharingDemand_files/figure-latex/auto-arima-plot-2-1.pdf>]
+<BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf, id=433, 361.35pt x
+ 361.35pt>
+File: BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf Graphic file (
+type pdf)
+<use BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/arima-25-plot-1-1
+.pdf  used on input line 665.
+(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
+<BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf, id=434, 361.35pt x
+ 361.35pt>
+File: BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf Graphic file (
+type pdf)
+<use BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf>
+Package pdftex.def Info: BikeSharingDemand_files/figure-latex/arima-25-plot-2-1
+.pdf  used on input line 674.
+(pdftex.def)             Requested size: 211.38614pt x 211.38614pt.
+[25pdfTeX warning (ext4): destination with the same identifier (name{figure.3})
+ has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.681 \newpage
+              pdfTeX warning (ext4): destination with the same identifier (name
+{figure.4}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.681 \newpage
+               <./BikeSharingDemand_files/figure-latex/arima-25-plot-1-1.pdf> <
+./BikeSharingDemand_files/figure-latex/arima-25-plot-2-1.pdf>] [26]
+<./images/time_series_ar25.png, id=458, 776.9025pt x 85.31876pt>
+File: ./images/time_series_ar25.png Graphic file (type png)
+<use ./images/time_series_ar25.png>
+Package pdftex.def Info: ./images/time_series_ar25.png  used on input line 709.
+
+(pdftex.def)             Requested size: 422.7811pt x 46.42943pt.
+[27 <./images/time_series_ar25.png>]
+
+Package xcolor Warning: Incompatible color definition on input line 742.
+
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 745.
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+
+Underfull \vbox (badness 4391) detected at line 896
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-[24]
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Underfull \vbox (badness 10000) detected at line 855
- []
-
-
-Underfull \vbox (badness 10000) detected at line 855
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-[25]
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Underfull \vbox (badness 10000) detected at line 855
- []
-
-
-Underfull \vbox (badness 10000) detected at line 855
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-[26]
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Underfull \vbox (badness 10000) detected at line 855
- []
-
-
-Underfull \vbox (badness 10000) detected at line 855
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-[27]
-
-Package xcolor Warning: Incompatible color definition on input line 855.
-
-
-Package xcolor Warning: Incompatible color definition on input line 855.
+Package xcolor Warning: Incompatible color definition on input line 896.
 
 [28]
-No file BikeSharingDemand.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 863.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 863.
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+
+Underfull \vbox (badness 10000) detected at line 896
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 896
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+[29]
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+
+Underfull \vbox (badness 10000) detected at line 896
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 896
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+[30]
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+
+Package xcolor Warning: Incompatible color definition on input line 896.
+
+[31]
+
+Package xcolor Warning: Incompatible color definition on input line 903.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Underfull \vbox (badness 10000) detected at line 1108
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+[32]
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Underfull \vbox (badness 10000) detected at line 1108
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1108
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+[33]
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Underfull \vbox (badness 10000) detected at line 1108
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1108
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+[34]
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Underfull \vbox (badness 10000) detected at line 1108
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1108
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+[35]
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1108.
+
+[36] (BikeSharingDemand.bbl)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1116.
+[37]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1116.
 (BikeSharingDemand.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 863.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 863.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1116.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1116.
+
 Package rerunfilecheck Info: File `BikeSharingDemand.out' has not changed.
-(rerunfilecheck)             Checksum: 495978DB85096E69399E3D57BE7A1D17;4714.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 863.
+(rerunfilecheck)             Checksum: F109C5802AD314F492E274D852D5B99E;6138.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1116.
  ) 
 Here is how much of TeX's memory you used:
- 15966 strings out of 492895
- 231050 string characters out of 3139972
- 381781 words of memory out of 3000000
- 19419 multiletter control sequences out of 15000+200000
- 50103 words of font info for 70 fonts, out of 3000000 for 9000
+ 16009 strings out of 492895
+ 231714 string characters out of 3139972
+ 382271 words of memory out of 3000000
+ 19434 multiletter control sequences out of 15000+200000
+ 53676 words of font info for 78 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,9n,38p,982b,392s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ts1.enc}{C:/MiKTeX 2.9/fonts/enc/dvips/l
-m/lm-ec.enc}<C:/MiKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/MiKTeX 2.9/font
-s/type1/public/lm/lmbx12.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/lmr10.pfb><C:
-/MiKTeX 2.9/fonts/type1/public/lm/lmr17.pfb><C:/MiKTeX 2.9/fonts/type1/public/l
-m/lmri10.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb><C:/MiKTeX 2.9/fon
-ts/type1/public/lm/lmtk10.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><
-C:/MiKTeX 2.9/fonts/type1/public/lm/lmtti10.pfb>
-Output written on BikeSharingDemand.pdf (28 pages, 5156618 bytes).
+ 32i,9n,38p,982b,473s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/MiKTeX 2.9/fonts/enc/dvips/lm
+/lm-rm.enc}{C:/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/MiKTeX 2.9/fonts
+/enc/dvips/lm/lm-mathit.enc}{C:/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ts1.enc}<C:/Mi
+KTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/
+lmbx12.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/lmmi10.pfb><C:/MiKTeX 2.9/fonts
+/type1/public/lm/lmr10.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/lmr17.pfb><C:/M
+iKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/l
+mri10.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb><C:/MiKTeX 2.9/fonts/
+type1/public/lm/lmsy10.pfb><C:/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/
+MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/MiKTeX 2.9/fonts/type1/public/l
+m/lmtti10.pfb>
+Output written on BikeSharingDemand.pdf (37 pages, 5213357 bytes).
 PDF statistics:
- 508 PDF objects out of 1000 (max. 8388607)
- 128 named destinations out of 1000 (max. 500000)
- 10584 words of extra memory for PDF output out of 12000 (max. 10000000)
+ 599 PDF objects out of 1000 (max. 8388607)
+ 139 named destinations out of 1000 (max. 500000)
+ 10656 words of extra memory for PDF output out of 12000 (max. 10000000)
 

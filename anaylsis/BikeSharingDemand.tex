@@ -163,14 +163,21 @@
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-{[}Intro{]}
+A bike sharing system is a means of renting a bicycle via a network of kiosk locations throughout a city and returning it to a different place as needed.
+
+For this analysis, we are looking at two years' worth of bikeshare data from Capital Bikeshare in Washington D.C. Our data was retrieved from the \href{https://www.kaggle.com/c/bike-sharing-demand/overview}{\textit{
+Bike Sharing Demand}} \cite{Kaggle2014} Kaggle competition.
+
+The objective is to predict the total count of bikes rented during each hour covered by the test set.
 
 \hypertarget{data-description}{%
 \section{Data Description}\label{data-description}}
 
 The dataset we chose for this project was a publicly shared, hourly bike sharing dataset made available through Kaggle in csv format.
 
-This data set is divided into two distinct sets -- a train and test set. The train set consists of 10,886 rows (titled ``train.csv'') and the test set consists of 6,493 rows (titled ``test.csv''). Within the training set, the first 19 days of each month are captured whereas in the test data set, the 20th day to the end of each month is present. The entirity of the data spans from 1/1/2011 through 12/31/2012 - encompassing two full years of bike sharing data. Interstingly, the time component of this analysis is captured in hours of each day meaning we have a calendar date represented 24 times (for each hour of that day) in the data, along with it's associated attribute values.
+This data set is divided into two distinct sets -- a train and test set. The train set consists of 10,886 rows (titled ``train.csv'') and the test set consists of 6,493 rows (titled ``test.csv''). Within the training set, the first 19 days of each month are captured whereas in the test data set, the 20th day to the end of each month is present. The entirety of the data spans from 1/1/2011 through 12/31/2012 - encompassing two full years of bike sharing data. Interestingly, the time component of this analysis is captured in hours of each day meaning we have a calendar date represented 24 times (for each hour of that day) in the data, along with it's associated attribute values.
+
+\newpage
 
 In train data set, there are a total of 12 attributes which capture multiple variables related to bike rentals. Some of these attributes are categorical, and others are continuous. All attributes are summarized in the table below:
 
@@ -201,16 +208,15 @@ Column Name & Type & Description\tabularnewline
 \hypertarget{exploratory-data-analysis}{%
 \section{Exploratory Data Analysis}\label{exploratory-data-analysis}}
 
-\hypertarget{plotting-against-response-variable}{%
-\subsection{Plotting against Response Variable}\label{plotting-against-response-variable}}
-
-\hypertarget{categorical-variables}{%
-\subsubsection{Categorical Variables}\label{categorical-variables}}
+\hypertarget{categorical-variables-plots}{%
+\subsection{Categorical Variables Plots}\label{categorical-variables-plots}}
 
 Several numeric variables were found to be better suited to categorization and were converted to factors.
 
 \hypertarget{season}{%
-\paragraph{Season}\label{season}}
+\subsubsection{Season}\label{season}}
+
+The Summer and Fall months show the highest seasonal averages.
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -229,26 +235,34 @@ Season & Label & Description\tabularnewline
 \newpage
 
 \hypertarget{holiday}{%
-\paragraph{Holiday}\label{holiday}}
+\subsubsection{Holiday}\label{holiday}}
+
+Whether or not the day is a holiday, oddly enough, has no noticeable impact on the average counts.
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.holiday-1.pdf}
 
+\newpage
+
 \hypertarget{working-day}{%
-\paragraph{Working Day}\label{working-day}}
+\subsubsection{Working Day}\label{working-day}}
+
+The same could be said of whether or not the recording was on a working day or weekend.
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.workingday-1.pdf}
 
 \newpage
 
 \hypertarget{weather}{%
-\paragraph{Weather}\label{weather}}
+\subsubsection{Weather}\label{weather}}
+
+Better weather shows improved rental rates as expected.
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.weather-1.pdf}
 
 \newpage
 
 \hypertarget{count-by-month}{%
-\paragraph{Count by Month}\label{count-by-month}}
+\subsubsection{Count by Month}\label{count-by-month}}
 
 The datetime column was broken out into multiple factors as well so that we could visualize the components of each date and aggregate by different dimensions of the timestamp. We felt this was also necessary due to the nature of how the train/ test data sets had been pre-split. (i.e\ldots{}with the first 19 days of the month holding the only true counts to validate our models against.)
 
@@ -268,25 +282,29 @@ The datetime column was broken out into multiple factors as well so that we coul
 
 \newpage
 
-\hypertarget{continuous-variables}{%
-\subsubsection{Continuous Variables}\label{continuous-variables}}
+\hypertarget{continuous-variable-plots}{%
+\subsection{Continuous Variable Plots}\label{continuous-variable-plots}}
 
 \hypertarget{count-by-temperature}{%
-\paragraph{Count by Temperature}\label{count-by-temperature}}
+\subsubsection{Count by Temperature}\label{count-by-temperature}}
+
+The upper and lower extremes of temperature readings appear to coincide with fewer rentals.
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.temp-1.pdf}
 
 \newpage
 
 \hypertarget{count-by-feels-like-temperature}{%
-\paragraph{Count by ``Feels like'' Temperature}\label{count-by-feels-like-temperature}}
+\subsubsection{Count by ``Feels like'' Temperature}\label{count-by-feels-like-temperature}}
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.atemp-1.pdf}
 
 \newpage
 
 \hypertarget{count-by-wind-speed}{%
-\paragraph{Count by Wind Speed}\label{count-by-wind-speed}}
+\subsubsection{Count by Wind Speed}\label{count-by-wind-speed}}
+
+There are fewer rentals recorded as the windspeed increases beyond a certain amount.
 
 \includegraphics{BikeSharingDemand_files/figure-latex/train.mod.1.windspeed-1.pdf}
 
@@ -317,7 +335,7 @@ There are several variables with a relatively high level of covariance from the 
 \hypertarget{question-of-interest}{%
 \subsection{Question of Interest}\label{question-of-interest}}
 
-The team be utilizing the multiple linear regression techniques we've learned up to this point in the program to predict the bike rental deman on a given date and time. The model will be evaluated on the Root Mean Squared Logarithmic Error, or RMSLE. As this data represents hourly data collected, there is an obvious time component associated with this particular competition. We wanted to gauge how effective mutiple linear regression would be when the assumption of indepdence is clearly violated.
+The team be utilizing the multiple linear regression techniques we've learned up to this point in the program to predict the bike rental demand on a given date and time. The model will be evaluated on the Root Mean Squared Logarithmic Error, or RMSLE. As this data represents hourly data collected, there is an obvious time component associated with this competition. We wanted to gauge how effective multiple linear regression would be when the assumption of independence is clearly violated.
 
 \hypertarget{model-selection}{%
 \subsection{Model Selection}\label{model-selection}}
@@ -325,101 +343,25 @@ The team be utilizing the multiple linear regression techniques we've learned up
 \hypertarget{lasso}{%
 \subsubsection{Lasso}\label{lasso}}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{split.perc =}\StringTok{ }\FloatTok{.80}
+We leveraged the LASSO approach to assist with variable selection for this model. Interestingly, the number of variables identified by our LASSO approach is very similar to the Stepwise approach.
 
-\NormalTok{train.indices =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(train.mod}\FloatTok{.1}\NormalTok{)[}\DecValTok{1}\NormalTok{],}\KeywordTok{round}\NormalTok{(split.perc }\OperatorTok{*}\StringTok{ }\KeywordTok{dim}\NormalTok{(train.mod}\FloatTok{.1}\NormalTok{)[}\DecValTok{1}\NormalTok{]))}
+\includegraphics{BikeSharingDemand_files/figure-latex/lasso-predictors-1.pdf}
 
-\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train =}\StringTok{ }\NormalTok{train.mod}\FloatTok{.1}\NormalTok{[train.indices,]}
-\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{test  =}\StringTok{ }\NormalTok{train.mod}\FloatTok{.1}\NormalTok{[}\OperatorTok{-}\NormalTok{train.indices,]}
-
-
-\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train}\OperatorTok{$}\NormalTok{datetime <-}\StringTok{ }\OtherTok{NULL}
-\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{test}\OperatorTok{$}\NormalTok{datetime <-}\StringTok{ }\OtherTok{NULL}
-
-
-\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 8,624 x 12
-##    season holiday workingday weather  temp humidity windspeed count year 
-##    <fct>  <fct>   <fct>      <fct>   <dbl>    <dbl>     <dbl> <dbl> <fct>
-##  1 Fall   No      Yes        Average 28.7        89     13.0   1.61 2012 
-##  2 Spring No      Yes        Great   21.3        27     31.0   4.77 2011 
-##  3 Fall   No      No         Great   28.7        54     11.0   6.17 2012 
-##  4 Winter No      Yes        Great    9.84       75      0     2.30 2011 
-##  5 Spring No      Yes        Good     8.2        34     19.0   4.16 2011 
-##  6 Summer No      No         Good    28.7        48      6.00  5.48 2011 
-##  7 Winter No      Yes        Great   13.9        46     15.0   6.30 2012 
-##  8 Spring No      Yes        Great    9.02       51     20.0   4.04 2011 
-##  9 Fall   No      Yes        Great   20.5        82      0     5.27 2012 
-## 10 Fall   No      Yes        Great   30.3        70     19.0   5.19 2012 
-## # ... with 8,614 more rows, and 3 more variables: month <ord>, day <fct>,
-## #   hour <fct>
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x <-}\StringTok{ }\KeywordTok{model.matrix}\NormalTok{(count}\OperatorTok{~}\NormalTok{.,train.mod.}\FloatTok{1.}\NormalTok{train)[,}\OperatorTok{-}\DecValTok{7}\NormalTok{]}
-\NormalTok{y <-}\StringTok{ }\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{train}\OperatorTok{$}\NormalTok{count}
-
-\NormalTok{grid=}\DecValTok{10}\OperatorTok{^}\KeywordTok{seq}\NormalTok{(}\DecValTok{10}\NormalTok{,}\OperatorTok{-}\DecValTok{2}\NormalTok{, }\DataTypeTok{length =}\DecValTok{100}\NormalTok{)}
-\NormalTok{lasso.model <-}\StringTok{ }\KeywordTok{glmnet}\NormalTok{(x,y,}\DataTypeTok{alpha=}\DecValTok{1}\NormalTok{, }\DataTypeTok{lambda=}\NormalTok{grid)}
-
-\NormalTok{xtest<-}\KeywordTok{model.matrix}\NormalTok{(count}\OperatorTok{~}\NormalTok{.,train.mod.}\FloatTok{1.}\NormalTok{test)[,}\OperatorTok{-}\DecValTok{7}\NormalTok{]}
-\NormalTok{ytest <-}\StringTok{ }\NormalTok{train.mod.}\FloatTok{1.}\NormalTok{test}\OperatorTok{$}\NormalTok{count}
-
-
-\NormalTok{cv.out=}\KeywordTok{cv.glmnet}\NormalTok{(x,y,}\DataTypeTok{alpha=}\DecValTok{1}\NormalTok{) }\CommentTok{#alpha=1 performs LASSO}
-\KeywordTok{plot}\NormalTok{(cv.out)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{BikeSharingDemand_files/figure-latex/unnamed-chunk-1-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{best.lambda <-cv.out}\OperatorTok{$}\NormalTok{lambda.min  }\CommentTok{#Optimal penalty parameter.  You can make this call visually.}
-\NormalTok{lasso.pred=}\KeywordTok{predict}\NormalTok{(lasso.model ,}\DataTypeTok{s=}\NormalTok{best.lambda ,}\DataTypeTok{newx=}\NormalTok{xtest)}
-
-\NormalTok{testMSE_LASSO <-}\StringTok{ }\KeywordTok{mean}\NormalTok{((ytest}\OperatorTok{-}\NormalTok{lasso.pred)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{testMSE_LASSO}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 0.3535176
-\end{verbatim}
+\newpage
 
 \hypertarget{custom-variable-selection}{%
 \subsubsection{Custom Variable Selection}\label{custom-variable-selection}}
 
-We developed the best fitting model with a custom selection of variables after having accounted for those with high correlation and adding interactive terms such as month/ hour based on the seasonal nature that the box plots exhibited.
-
-\begin{verbatim}
-## Warning: not plotting observations with leverage one:
-##   5555
-
-## Warning: not plotting observations with leverage one:
-##   5555
-\end{verbatim}
+We developed our custom model by adding an interactive term for month and hour based on the seasonal nature that the box plots exhibited.
 
 \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-1.pdf} \includegraphics{BikeSharingDemand_files/figure-latex/custom-model-2.pdf}
 
-\hypertarget{custom-rmsle}{%
-\paragraph{Custom RMSLE}\label{custom-rmsle}}
-
-\begin{verbatim}
-## [1] 0.1534782
-\end{verbatim}
+\newpage
 
 \hypertarget{kaggle-score}{%
 \paragraph{Kaggle Score}\label{kaggle-score}}
 
-The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 0.67517 for our custom model. We scored better than around 24\% of all public submission for the competition with this technique.
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the Kaggle submission was 0.67517 for our custom model. We scored better than around 24\% of all public submission for the competition with this technique.
 
 \label{objective-one:custom-kaggle}
 
@@ -428,19 +370,12 @@ The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission w
 \hypertarget{stepwise}{%
 \subsubsection{Stepwise}\label{stepwise}}
 
-\hypertarget{stepwise-rmsle}{%
-\paragraph{Stepwise RMSLE}\label{stepwise-rmsle}}
-
-The Root Mean Squared Logarithmic Error Loss calculation against the train data set.
-
-\begin{verbatim}
-## [1] 0.1469294
-\end{verbatim}
+Next, we leveraged the Stepwise automatic variable selection methodology. As mentioned previously, the variables selected by the Stepwise methodology are very similar to the LASSO recommendation.
 
 \hypertarget{kaggle-score-1}{%
 \paragraph{Kaggle Score}\label{kaggle-score-1}}
 
-The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 0.64765 for our stepwise model. We scored better than around 24\% of all public submission for the competition with this technique, which was almost identical to that of the custom model with an interaction.
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the Kaggle submission was 0.64765 for our stepwise model. Again, we scored better than around 24\% of all public submission for the competition with this technique, which was almost identical to that of the custom model with an interaction.
 
 \label{objective-one:stepwise-kaggle}
 
@@ -454,32 +389,194 @@ The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission w
 \begin{itemize}
 \tightlist
 \item
-  The response variable is linear
+  The residual plots are approximately normal based on the QQ plot and Histogram
 \item
-  The data is normally distributed
+  The log transformation of the response, in addition to extreme observation removal, has removed both outliers and observations with high leverage
 \item
-  Independence
+  The independence assumption is clearly broken due to the nature of the hourly collections. We will proceed knowing that MLR may not be the best suited model for this particular data set.
 \end{itemize}
 
 \hypertarget{comparing-competing-models}{%
 \subsection{Comparing Competing Models}\label{comparing-competing-models}}
+
+We created three models using the training bike sharing data set. All three models performed very similar across our scoring metrics and no single model stood out as the front runner. The table below summarizes the performance of the models using the adjusted R2, AIC, BIC, and RMSE:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Model & Adjusted R2 & AIC\tabularnewline
+\midrule
+\endhead
+1. Custom & 0.7915 & 21642.12\tabularnewline
+2. Lasso & 0.7946 & 21250.6\tabularnewline
+3. Stepwise & 0.8224 & 19668.86\tabularnewline
+\bottomrule
+\end{longtable}
 
 \newpage
 
 \hypertarget{parameters}{%
 \subsection{Parameters}\label{parameters}}
 
-\protect\hyperlink{parameters}{Parameters}
+The following summarizes the parameters for estimates for the interaction model(custom) and the stepwise model.
+
+\newpage
+
+\hypertarget{stepwise-model-summary}{%
+\subsubsection{Stepwise Model Summary}\label{stepwise-model-summary}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stw.sm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stw.model.formula, data = train.mod.1)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -3.15355 -0.29296  0.03003  0.36343  2.28175 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)     3.3174555  0.0542954  61.100  < 2e-16 ***
+## hour01         -0.6274075  0.0399811 -15.693  < 2e-16 ***
+## hour02         -1.1359994  0.0404183 -28.106  < 2e-16 ***
+## hour03         -1.6615266  0.0411443 -40.383  < 2e-16 ***
+## hour04         -1.9322047  0.0414142 -46.656  < 2e-16 ***
+## hour05         -0.9274850  0.0402628 -23.036  < 2e-16 ***
+## hour06          0.2884532  0.0400794   7.197 6.56e-13 ***
+## hour07          1.2738710  0.0399734  31.868  < 2e-16 ***
+## hour08          1.9021997  0.0398896  47.687  < 2e-16 ***
+## hour09          1.5748200  0.0399255  39.444  < 2e-16 ***
+## hour10          1.2474375  0.0400854  31.119  < 2e-16 ***
+## hour11          1.3669137  0.0403745  33.856  < 2e-16 ***
+## hour12          1.5552795  0.0407026  38.211  < 2e-16 ***
+## hour13          1.5299500  0.0410548  37.266  < 2e-16 ***
+## hour14          1.4475331  0.0413260  35.027  < 2e-16 ***
+## hour15          1.5061812  0.0414038  36.378  < 2e-16 ***
+## hour16          1.7681031  0.0413060  42.805  < 2e-16 ***
+## hour17          2.1811506  0.0410659  53.113  < 2e-16 ***
+## hour18          2.0968370  0.0407964  51.398  < 2e-16 ***
+## hour19          1.8037735  0.0403534  44.699  < 2e-16 ***
+## hour20          1.5036316  0.0401264  37.472  < 2e-16 ***
+## hour21          1.2442347  0.0399632  31.135  < 2e-16 ***
+## hour22          1.0003851  0.0398915  25.078  < 2e-16 ***
+## hour23          0.6000841  0.0398591  15.055  < 2e-16 ***
+## month.L         0.6999912  0.0246473  28.400  < 2e-16 ***
+## month.Q        -0.3389488  0.0425804  -7.960 1.89e-15 ***
+## month.C         0.1248240  0.0217868   5.729 1.04e-08 ***
+## month^4        -0.0322233  0.0226041  -1.426 0.154028    
+## month^5        -0.1711829  0.0210762  -8.122 5.08e-16 ***
+## month^6         0.0058324  0.0202813   0.288 0.773679    
+## month^7         0.1613935  0.0204054   7.909 2.84e-15 ***
+## month^8        -0.0330624  0.0201660  -1.640 0.101136    
+## month^9        -0.0205400  0.0201300  -1.020 0.307577    
+## month^10        0.0446766  0.0201412   2.218 0.026564 *  
+## month^11       -0.0053160  0.0200316  -0.265 0.790720    
+## year2012        0.4839078  0.0117932  41.033  < 2e-16 ***
+## weatherGood    -0.0552311  0.0143444  -3.850 0.000119 ***
+## weatherAverage -0.5515117  0.0242992 -22.697  < 2e-16 ***
+## weatherPoor    -0.1034753  0.6025957  -0.172 0.863664    
+## temp            0.0267535  0.0017862  14.978  < 2e-16 ***
+## humidity       -0.0033135  0.0004201  -7.888 3.36e-15 ***
+## workingdayYes  -0.0762112  0.0128696  -5.922 3.28e-09 ***
+## windspeed      -0.0036725  0.0007753  -4.737 2.20e-06 ***
+## holidayYes     -0.0632055  0.0363666  -1.738 0.082238 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.6012 on 10736 degrees of freedom
+## Multiple R-squared:  0.823,  Adjusted R-squared:  0.8223 
+## F-statistic:  1161 on 43 and 10736 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\newpage
+
+\hypertarget{stepwise-model-confidence-intervals}{%
+\subsubsection{Stepwise Model Confidence Intervals}\label{stepwise-model-confidence-intervals}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stw.model.conf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                       2.5 %       97.5 %
+## (Intercept)     3.211026394  3.423884533
+## hour01         -0.705777933 -0.549037038
+## hour02         -1.215226626 -1.056772119
+## hour03         -1.742176911 -1.580876202
+## hour04         -2.013384298 -1.851025149
+## hour05         -1.006407588 -0.848562369
+## hour06          0.209890114  0.367016273
+## hour07          1.195515864  1.352226204
+## hour08          1.824008596  1.980390741
+## hour09          1.496558675  1.653081418
+## hour10          1.168862680  1.326012291
+## hour11          1.287772330  1.446055168
+## hour12          1.475494788  1.635064118
+## hour13          1.449474949  1.610425000
+## hour14          1.366526484  1.528539618
+## hour15          1.425022148  1.587340244
+## hour16          1.687135770  1.849070459
+## hour17          2.100653854  2.261647266
+## hour18          2.016868484  2.176805446
+## hour19          1.724673301  1.882873603
+## hour20          1.424976440  1.582286771
+## hour21          1.165899502  1.322569880
+## hour22          0.922190315  1.078579819
+## hour23          0.521952963  0.678215327
+## month.L         0.651677911  0.748304457
+## month.Q        -0.422414228 -0.255483406
+## month.C         0.082117898  0.167530202
+## month^4        -0.076531522  0.012085007
+## month^5        -0.212496092 -0.129869713
+## month^6        -0.033922711  0.045587412
+## month^7         0.121395096  0.201391945
+## month^8        -0.072591494  0.006466684
+## month^9        -0.059998566  0.018918535
+## month^10        0.005196073  0.084157154
+## month^11       -0.044581694  0.033949624
+## year2012        0.460791009  0.507024554
+## weatherGood    -0.083348733 -0.027113558
+## weatherAverage -0.599142667 -0.503880774
+## weatherPoor    -1.284674358  1.077723669
+## temp            0.023252232  0.030254717
+## humidity       -0.004136865 -0.002490104
+## workingdayYes  -0.101438121 -0.050984345
+## windspeed      -0.005192272 -0.002152635
+## holidayYes     -0.134490754  0.008079730
+\end{verbatim}
+
+\newpage
 
 \hypertarget{model-interpretation}{%
 \subsection{Model Interpretation}\label{model-interpretation}}
 
-\protect\hyperlink{model-interpretation}{Model Interpretation}
+For the Stepwise model, keeping the temp and humidity constant a unit increase in windspeed is associated with a multiplicative change of 0.997 units in median of counts. The 95\% confidence interval for the multiplicative change is = (0.994, .998)
+
+Keeping the temp and windspeed constant a unit increase in humidity is associated with a multiplicative change of 0.997 unit in median of counts. The 95\% confidence interval for the multiplicative change is =(0.996, .998)
+
+Keeping humidity and temperature constant a unit change in temperature is associated with a multiplicative change of 1.03 units in median of counts. The 95\% confidence interval for the multiplicative change is = (1.02, 1.031)
+
+\textbf{Stepwise Model}
+
+\begin{align}
+\mu \lbrace log(count) \rbrace = \hat{\beta_0} + \hat{\beta_1} (hour) +  \hat{\beta_2} (month) + 
+\nonumber\\
+\hat{\beta_3} (year) + \hat{\beta_4} (weather) +  \hat{\beta_5} (temp) + \hat{\beta_6} (humidity) +
+\nonumber\\
+\hat{\beta_7} (workingday) +  \hat{\beta_8} (windspeed) + \hat{\beta_9} (holiday)\label{eq:Stepwise}
+\end{align}
 
 \hypertarget{conclusion}{%
 \subsection{Conclusion}\label{conclusion}}
 
-\protect\hyperlink{conclusion-1}{Conclusion}
+To conclude, based on the initial EDA, it was identified that a log-linear model was a be better fit for Multiple Linear Regression. Also, once the outliers were identified and excluded, we ran LASSO, stepwise and custom model selection on the dataset. As we can see from the above sections, the results from the stepwise and custom models were very close. We find that the stepwise performed slightly better than the custom and LASSO models with the lowest standard error measures (AIC = 19668, BIC = 19996 and RMSE = 0.599).
 
 \newpage
 
@@ -489,7 +586,7 @@ The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission w
 \hypertarget{question-of-interest-1}{%
 \subsection{Question of Interest}\label{question-of-interest-1}}
 
-As the independence assumption from Objective I appears to have been violated, the team wanted to apply the time series analysis techniques we've learned up to this point in the MSDS program in an attempt to address. The primary goal was to compare and contrast the performance of auto arima models versus those that we modeled on our own.
+As the independence assumption from Objective I appears to have been violated, the team wanted to apply the time series analysis techniques we've learned up to this point in the MSDS program in an attempt to address the issue. The primary goal was to compare and contrast the performance of auto arima models versus those that we modeled on our own.
 
 Additionally, we wanted to compare the Kaggle submission to that from Objective I to see if our predictions were better or worse than from the prior objective.
 
@@ -509,7 +606,7 @@ As the data had been pre-split monthly, we needed to make our predictions from t
 \item
   Fit AR model
 \item
-  Forcast x number of observations based on the number of rows from test dataframe and impute the count from the time series forecast
+  Forcast x number of observations based on the number of rows from test data frame and impute the count from the time series forecast
 \end{enumerate}
 
 \newpage
@@ -586,7 +683,7 @@ As the data had been pre-split monthly, we needed to make our predictions from t
 \hypertarget{accuracy-metrics}{%
 \subsubsection{Accuracy Metrics}\label{accuracy-metrics}}
 
-The accuracy metrics appear to go in favor of the AR25 model.
+The accuracy metrics appear to go in favor of the AR25 model. In some year/ month combinations the difference was more obvious and was more reason to utilize the AR25 method.
 
 \begin{table}[H]
 \centering
@@ -605,7 +702,7 @@ AR25 & 0.2265693 & 768.3810 & 0.3025818\\
 \hypertarget{kaggle-score-2}{%
 \paragraph{Kaggle Score}\label{kaggle-score-2}}
 
-The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission was 1.01847 for our AR25 model. We scored better than only 14.48\% of all public submission for the competition which was considerably worse than our score from both of the multiple linear regression models above.
+The Root Mean Squared Logarithmic Error Loss (RMSLE) for the Kaggle submission was 1.01847 for our AR25 model. We scored better than only 14.48\% of all public submission for the competition which was considerably worse than our score from all of the multiple linear regression models above.
 
 \label{objective-two:ar25-kaggle}
 
@@ -614,7 +711,7 @@ The Root Mean Squared Logarithmic Error Loss (RMSLE) for the kaggle submission w
 \hypertarget{model-assumption-assessment}{%
 \subsection{Model Assumption Assessment}\label{model-assumption-assessment}}
 
-Both the ARIMA and AR 25 models showed a constant mean and variance for the timespan of the observations. The auto-correlations however were noticably better for the AR 25 graph. The error terms were also slightly improved which is the reason we elected to not go with the automated selection approach.
+Both the ARIMA and AR 25 models showed a constant mean and variance for the timespan of the observations. The auto-correlations however were noticeably better for the AR 25 graph. The error terms were also slightly improved which is the reason we elected to not go with the automated selection approach.
 
 \begin{itemize}
 \tightlist
@@ -629,7 +726,7 @@ Both the ARIMA and AR 25 models showed a constant mean and variance for the time
 \hypertarget{conclusion-1}{%
 \subsection{Conclusion}\label{conclusion-1}}
 
-Although the data set was found to be serially correlated, ultimately applying time series techniques was not sufficient to improve our RMSLE above and beyond the multiple linear regression techniques from objective one. Again, this likely had more to due with the fact that we were attempting to predict future observations 10 plus days in advance on a monthly basis. And with the seasonal nature of our hourly observations, the accuracy of the preduction became less accurate over time and showed a regression to the mean after only a few days worth of predictions. The immediate observations however, within 24 to 48 hours, visually at least showed much better predictive trends.
+Although the data set was found to be serially correlated, ultimately applying time series techniques was not enough to improve our RMSLE above and beyond the multiple linear regression techniques from objective one. Again, this likely had more to do with the fact that we were attempting to predict future observations 10 plus days in advance on a monthly basis. And with the seasonal nature of our hourly observations, the accuracy of the prediction became less accurate over time and showed a regression to the mean after only a few days' worth of predictions. The immediate observations however, within 24 to 48 hours, visually at least showed much better predictive trends.
 
 \newpage
 
@@ -641,6 +738,162 @@ Although the data set was found to be serially correlated, ultimately applying t
 
 \hypertarget{r-code-for-objective-i}{%
 \subsubsection{R Code For Objective I}\label{r-code-for-objective-i}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{### Library Imports}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\CommentTok{# Date manipulation}
+\KeywordTok{library}\NormalTok{(lubridate)}
+\CommentTok{# Plotting}
+\KeywordTok{library}\NormalTok{(olsrr)}
+\CommentTok{# RMLSE}
+\KeywordTok{library}\NormalTok{(MLmetrics)}
+
+
+\CommentTok{### Load the csv data}
+\NormalTok{train <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'../../../data/train.csv'}\NormalTok{)}
+\NormalTok{test <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{'../../../data/test.csv'}\NormalTok{)}
+
+\CommentTok{### Identify Dimensions}
+
+\NormalTok{no_of_rows_trn <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(train)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{no_of_rows_tst <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(test)[}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{no_of_cols_trn <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(train)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{no_of_cols_tst <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(test)[}\DecValTok{2}\NormalTok{]}
+
+\CommentTok{# no_of_rows_trn}
+\CommentTok{# no_of_rows_tst}
+\CommentTok{# }
+\CommentTok{# no_of_cols_trn}
+\CommentTok{# no_of_cols_tst}
+
+\CommentTok{### Missing Data (Both)}
+
+\CommentTok{# train}
+\KeywordTok{any}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(train))}
+
+\CommentTok{# test}
+\KeywordTok{any}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(test))}
+
+
+\CommentTok{### Log the response variable}
+\NormalTok{train}\OperatorTok{$}\NormalTok{count <-}\StringTok{ }\KeywordTok{log}\NormalTok{(train}\OperatorTok{$}\NormalTok{count)}
+
+
+\CommentTok{### Factors}
+\NormalTok{train}\OperatorTok{$}\NormalTok{season <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{season, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Spring"}\NormalTok{, }\StringTok{"Summer"}\NormalTok{, }\StringTok{"Fall"}\NormalTok{, }\StringTok{"Winter"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{season <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{season, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Spring"}\NormalTok{, }\StringTok{"Summer"}\NormalTok{, }\StringTok{"Fall"}\NormalTok{, }\StringTok{"Winter"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{season)}
+
+\NormalTok{train}\OperatorTok{$}\NormalTok{holiday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{holiday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{holiday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{holiday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{holiday)}
+
+\NormalTok{train}\OperatorTok{$}\NormalTok{workingday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{workingday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{workingday <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{workingday, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{workingday)}
+
+\NormalTok{train}\OperatorTok{$}\NormalTok{weather <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{weather, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Great"}\NormalTok{, }\StringTok{"Good"}\NormalTok{, }\StringTok{"Average"}\NormalTok{, }\StringTok{"Poor"}\NormalTok{))}
+\NormalTok{test}\OperatorTok{$}\NormalTok{weather <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(test}\OperatorTok{$}\NormalTok{weather, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Great"}\NormalTok{, }\StringTok{"Good"}\NormalTok{, }\StringTok{"Average"}\NormalTok{, }\StringTok{"Poor"}\NormalTok{))}
+
+\KeywordTok{table}\NormalTok{(train}\OperatorTok{$}\NormalTok{weather)}
+
+
+\CommentTok{### Split Date-Time (Both)}
+\NormalTok{train <-}\StringTok{ }\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{year =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%Y"}\NormalTok{)), }
+         \DataTypeTok{month =} \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%m"}\NormalTok{)), }
+         \DataTypeTok{day =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%d"}\NormalTok{)),}
+         \DataTypeTok{hour =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%H"}\NormalTok{)))}
+
+\NormalTok{test <-}\StringTok{ }\NormalTok{test }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{year =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%Y"}\NormalTok{)), }
+         \DataTypeTok{month =} \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%m"}\NormalTok{)), }
+         \DataTypeTok{day =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%d"}\NormalTok{)),}
+         \DataTypeTok{hour =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{format}\NormalTok{(datetime, }\DataTypeTok{format =} \StringTok{"%H"}\NormalTok{)))}
+
+
+
+\CommentTok{### Convert Months to Ordered Factor (Both)}
+\NormalTok{train}\OperatorTok{$}\NormalTok{month <-}\KeywordTok{month}\NormalTok{(train}\OperatorTok{$}\NormalTok{datetime, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{abbr =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{test}\OperatorTok{$}\NormalTok{month <-}\KeywordTok{month}\NormalTok{(test}\OperatorTok{$}\NormalTok{datetime, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{abbr =} \OtherTok{FALSE}\NormalTok{)}
+
+
+
+\CommentTok{### Outlier}
+\NormalTok{outliers <-}\StringTok{ }\NormalTok{train[   train}\OperatorTok{$}\NormalTok{count }\OperatorTok{<}\StringTok{ }\KeywordTok{median}\NormalTok{(train}\OperatorTok{$}\NormalTok{count) }\OperatorTok{-}\StringTok{ }\NormalTok{(}\KeywordTok{sd}\NormalTok{(train}\OperatorTok{$}\NormalTok{count) }\OperatorTok{*}\StringTok{ }\DecValTok{3}\NormalTok{), ]}
+\CommentTok{# outliers}
+
+\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(month) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(count), }\DataTypeTok{sd =} \KeywordTok{sd}\NormalTok{(count), }\DataTypeTok{median =} \KeywordTok{median}\NormalTok{(count), }\DataTypeTok{observations =} \KeywordTok{n}\NormalTok{())}
+
+
+\CommentTok{# remove outliers}
+\NormalTok{train <-}\StringTok{ }\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(}\OperatorTok{!}\NormalTok{datetime }\OperatorTok{%in%}\StringTok{ }\NormalTok{outliers}\OperatorTok{$}\NormalTok{datetime)}
+
+\CommentTok{# Extreme Observation}
+\CommentTok{# train[5555, ] # 2012-01-09 18:00:00}
+\NormalTok{train <-}\StringTok{ }\NormalTok{train }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(datetime }\OperatorTok{!=}\StringTok{ '2012-01-09 18:00:00'}\NormalTok{)}
+
+
+
+\CommentTok{### Model Fitting}
+
+\CommentTok{### Custom Model}
+\NormalTok{model.base.formula =}\StringTok{ }\NormalTok{count }\OperatorTok{~}\StringTok{ }\NormalTok{weather }\OperatorTok{+}\StringTok{ }
+\StringTok{                             }\NormalTok{windspeed }\OperatorTok{+}\StringTok{ }
+\StringTok{                             }\NormalTok{temp }\OperatorTok{+}\StringTok{ }
+\StringTok{                             }\NormalTok{month }\OperatorTok{+}
+\StringTok{                             }\NormalTok{hour }\OperatorTok{+}
+\StringTok{                             }\NormalTok{month}\OperatorTok{:}\NormalTok{hour}
+  
+  \CommentTok{# datetime}
+
+
+\NormalTok{model  <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ model.base.formula, }\DataTypeTok{data =}\NormalTok{ train)}
+
+\KeywordTok{plot}\NormalTok{(model)}
+
+\KeywordTok{summary}\NormalTok{(model)}
+
+\KeywordTok{ols_plot_resid_lev}\NormalTok{(model)}
+
+
+
+\CommentTok{### Stepwise Model}
+\NormalTok{train.mod}\FloatTok{.1}\OperatorTok{$}\NormalTok{datetime <-}\StringTok{ }\OtherTok{NULL}
+\NormalTok{train.mod}\FloatTok{.1}\OperatorTok{$}\NormalTok{datetime <-}\StringTok{ }\OtherTok{NULL}
+
+\CommentTok{# Fit the model with all parameters}
+\NormalTok{fit1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(count }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data=}\NormalTok{train.mod}\FloatTok{.1}\NormalTok{)}
+\CommentTok{# Fit the model with only 1 parameter}
+\NormalTok{fit2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(count }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{data=}\NormalTok{train.mod}\FloatTok{.1}\NormalTok{)}
+
+
+\CommentTok{# stw.model <- stepAIC(fit2,direction="both",scope=list(upper=fit1,lower=fit2))}
+\CommentTok{# summary(stw.model)}
+
+\NormalTok{stw.model.formula <-}\StringTok{ }\NormalTok{count }\OperatorTok{~}\StringTok{ }\NormalTok{hour }\OperatorTok{+}\StringTok{ }\NormalTok{month }\OperatorTok{+}\StringTok{ }\NormalTok{year }\OperatorTok{+}\StringTok{ }\NormalTok{weather }\OperatorTok{+}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{humidity }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\NormalTok{workingday }\OperatorTok{+}\StringTok{ }\NormalTok{windspeed }\OperatorTok{+}\StringTok{ }\NormalTok{holiday}
+
+\NormalTok{stw.model <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(stw.model.formula,}
+               \DataTypeTok{data =}\NormalTok{ train.mod}\FloatTok{.1}\NormalTok{)}
+
+\NormalTok{stw.sm <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(stw.model)}
+\NormalTok{stw.sm.coe <-}\StringTok{ }\NormalTok{stw.sm}\OperatorTok{$}\NormalTok{coefficients}
+
+\CommentTok{# get the CIs for the coefficients}
+\NormalTok{stw.model.conf <-}\StringTok{ }\KeywordTok{confint}\NormalTok{(stw.model)}
+\end{Highlighting}
+\end{Shaded}
 
 \newpage
 
