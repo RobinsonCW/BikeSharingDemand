@@ -1,0 +1,233 @@
+---
+title: "DS6372_Project"
+author: "Jayson Barker"
+date: "9/24/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r sect1}
+# setting working directory
+setwd("F:/SMU/DS6372/Project 1/bike-sharing-demand")
+bike_test<-read.csv("test.csv")
+bike_train<-read.csv("train.csv")
+library(car)
+library(ggplot2)
+library(sqldf)
+library(leaps)
+library(corrplot)
+library(MASS)
+library(dplyr)
+
+```
+
+
+## Examine the first couple of rows
+```{r sect2}
+
+# convert datetime to just date
+bike_train[,"date_conv"] <- as.Date(as.POSIXct(bike_train$datetime))
+
+# log convert registered
+bike_train[,"log_registered"] <- log(bike_train$registered)
+
+# first couple of rows
+head(bike_train)
+
+# summary of the data set
+
+# more detail about the data set
+str(bike_train)
+
+```
+
+
+## Individual Scatterplot Matricies
+```{r sect4, echo=TRUE}
+
+# various scatter plots - registered vs temp - color by season
+plot(bike_train$registered,bike_train$temp, xlab="registered",ylab="temp", col = bike_train$season)
+
+# various scatter plots - registered vs humidity - color by season
+plot(bike_train$registered,bike_train$humidity, xlab="registered",ylab="humidity", col = bike_train$season)
+
+# various scatter plots - registered vs windspeed - color by season
+plot(bike_train$registered,bike_train$windspeed, xlab="registered",ylab="windspeed", col = bike_train$season)
+
+# various scatter plots - registered vs casual - color by season
+plot(bike_train$registered,bike_train$casual, xlab="registered",ylab="casual", col = bike_train$season)
+
+# various scatter plots - registered vs count - color by season
+plot(bike_train$registered,bike_train$count, xlab="registered",ylab="count", col = bike_train$season)
+
+# various scatter plots - registered vs atemp - color by season
+plot(bike_train$registered,bike_train$atemp, xlab="registered",ylab="atemp", col = bike_train$season)
+
+```
+
+
+## Plot the data
+```{r sect3}
+
+# average rentals per day and  season
+avg_count_day <- data.frame(sqldf("SELECT date_conv, season, avg(count) as 'avgcount' FROM bike_train GROUP BY date_conv, season ORDER BY date_conv DESC")) 
+
+# plot average count per day - increasing trend
+ggplot(avg_count_day, aes(x=date_conv, y=avgcount, color=season)) + geom_point(data = avg_count_day) + geom_line(data = avg_count_day)+ggtitle("Bikes Rented By Date")
+
+```
+
+
+## Test the correlation between predictors
+```{r sect5}
+
+# build a correlation plot to test the correlation between predictors
+# atemp seems to be highly correlated with temp
+bt <- bike_train[,2:9]
+bt_cor <- cor(bt)
+corrplot(bt_cor, method = 'color', addCoef.col="black")
+
+```
+
+
+## Testing the ASE score for the available predictors
+```{r sect6}
+
+# set up the initial ASE feed
+reg.fwd=regsubsets(registered~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual ,data=bike_train,method="forward",nvmax=9)
+
+# Test ASE prediction
+predict.regsubsets =function (object , newdata ,id ,...){
+  form=as.formula (object$call [[2]])
+  mat=model.matrix(form ,newdata )
+  coefi=coef(object ,id=id)
+  xvars=names(coefi)
+  mat[,xvars]%*%coefi
+}
+
+testASE<-c()
+for (i in 1:9){
+  predictions<-predict.regsubsets(object=reg.fwd,newdata=bike_train,id=i) 
+  testASE[i]<-mean(bike_train$registered-predictions)
+}
+
+testASE
+
+# plot the ASE model
+par(mfrow=c(1,1))
+plot(1:9,testASE,type="l",xlab="# of predictors",ylab="test vs train ASE")
+index<-which(testASE==min(testASE))
+points(index,testASE[index],col="red",pch=10)
+rss<-summary(reg.fwd)$rss
+lines(1:9,rss/10886,lty=3,col="blue")  # Dividing by 10886 since ASE=RSS/sample size
+
+```
+
+## Build full fit model
+```{r sect8}
+
+# full fit model
+full.fit<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season + casual
+                ,data=bike_train)
+
+# adj R2 = 0.5514;
+summary(full.fit)
+
+
+```
+
+
+## Look at residual Plots
+```{r sect9}
+
+# set the panel to 2x2
+par(mfrow = c(2, 2))
+plot(full.fit)
+
+```
+
+## Stepwise modelling for variable selection
+```{r sect10}
+
+# setting working directory
+setwd("F:/SMU/DS6372/Project 1/bike-sharing-demand")
+bike_test<-read.csv("test.csv")
+bike_train<-read.csv("train.csv")
+library(car)
+library(ggplot2)
+library(sqldf)
+library(leaps)
+library(corrplot)
+library(MASS)
+library(dplyr)
+
+full.fit.step<-stepAIC(full.fit, direction="both")
+summary(full.fit.step)
+```
+
+
+full.fit.step<-stepAIC(full.fit, direction="both")
+summary(full.fit.step)
+
+## Try stepwise model recommendation
+```{r sect13}
+
+full.fit.step<-lm(count~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season
+                ,data=bike_train)
+
+# R2 .2604
+summary(full.fit.step)
+
+# AIC compare - 140819
+AIC(full.fit.step)
+
+# BIC compare - 140892.9
+BIC(full.fit.step)
+
+# try log transformation
+full.fit.step.log<-lm(log(count)~humidity + windspeed + temp + atemp + weather  + workingday + holiday + season
+                ,data=bike_train)
+
+# R2 .2576
+summary(full.fit.step.log)
+
+# AIC compare - 36329.35
+AIC(full.fit.step.log)
+
+# BIC compare - 36402.3
+BIC(full.fit.step.log)
+
+# Using Lasso via SAS, the suggested model is below RMSE (Lasso): 122.6  |  RMSE LM approach: 121.3
+SAS.Lasso <- lm(count ~ humidity + windspeed + atemp + weather + workingday + holiday + season ,data=bike_train)
+summary(SAS.Lasso)
+
+# build the model for scoring
+model.base.formula = count ~ weather + 
+                             windspeed + 
+                             atemp +
+                             weather +
+                             workingday + 
+                             holiday +
+                             season
+
+# store the model for scoring
+model  <- lm(formula = model.base.formula, data = bike_train)
+                            
+# apply the model to the test data set                             
+bike_test$count <- predict.lm(model, bike_test)
+
+# when less that 0, replace
+# bike_test <- bike_test %>%
+  # mutate(count = floor(ifelse(count < 0, 0, count)))
+
+# prepare Kaggle submission  
+# submit <- bike_test %>% subset(select=c(datetime, count))
+# write.csv(submit, file = "./kaggle_submission.csv", row.names = F)
+
+```
+
+
