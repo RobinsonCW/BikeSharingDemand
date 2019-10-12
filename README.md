@@ -8,8 +8,8 @@ Multiple linear regression project with temporal component for prediction of bik
 
 ## Analysis Files
 
-* [Regression Analysis Paper (pdf)](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/BikeSharingDemand.pdf): A paper covering the analysis. 
-* [Regression Analysis (Rmd)](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/BikeSharingDemand.Rmd): An R-markdown file with the analysis.
+* [Regression Analysis Paper (pdf)](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/analysis/BikeSharingDemand.pdf): A paper covering the analysis. 
+* [Regression Analysis (Rmd)](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/analysis/BikeSharingDemand.Rmd): An R-markdown file with the analysis.
 
 ## Data
 
@@ -27,8 +27,8 @@ The [Codebook] provides additional details on the regarding the computational en
     ├── analysis                            # Primary analysis files
     |    ├── exploratory_data_analysis      # Rmarkdown files for EDA
     |    ├── studies                        # Rmarkdown files for primary analysis questions
-    |    ├── helper                         # Files containing helper functions
-    │    └── data                           # Raw data and merge automation files
-    ├── CodeBook.md                         # Information regarding the computational environment, code, and data
-    ├── LICENSE                             # All code and analysis is licensed under the MIT license. Data is provided by Kaggle.com.
+    |    ├── images                         # Folder containing images for the final paper
+    │    └── data                           # Raw data for analysis questions
+    ├── CodeBook.md                         # Information regarding the environment setup
+    ├── LICENSE                             # All code and analysis is licensed under the MIT license. The data was provided by Kaggle.com.
     └── README.md
