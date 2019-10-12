@@ -15,8 +15,8 @@ Multiple linear regression project with temporal component for prediction of bik
 
 The [data description] contains general information features of the dataset. The dataset [readme] provides a reference for the dataset. The data was pre-split into training and testing sets by Kaggle.com.
 
-* [`test.csv`](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/data/test.csv): the testing dataset.
-* [`train.csv`](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/anaylsis/data/train.csv): the training dataset.
+* [`test.csv`](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/analysis/data/test.csv): the testing dataset.
+* [`train.csv`](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/analysis/data/train.csv): the training dataset.
 
 ## Codebook
 
