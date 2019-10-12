@@ -20,7 +20,7 @@ The [data description] contains general information features of the dataset. The
 
 ## Codebook
 
-The [Codebook] provides additional details on the regarding the computational environment, code, and data.
+The [Codebook](https://github.com/RobinsonCW/BikeSharingDemand/blob/master/CodeBook.md) provides additional details on the regarding the computational environment, code, and data.
 
 ## Repo Structure
     .
